@@ -17,6 +17,8 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+	<!-- 스프링부트는 jsp 가 기본으로 안들어있어서 thymeleaf 를 화면단 만드는데 사용 -->
+	<!-- 스프링부트가 간단해진 이유 : starter 이런것들 안에 여러개 라이브러리가 포함되있다 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -30,6 +32,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+    <!-- devtools : 알아서 패키징, 배포작업을 해준다 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

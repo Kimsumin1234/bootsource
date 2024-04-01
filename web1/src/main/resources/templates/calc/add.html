@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<!-- thymeleaf 사용하는 방법 -->
+<!-- xmlns:th => th 키워드가 정의되어 있는 곳의 주소 -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Calc Add</h1>
+    <form action="" method="post">
+      <input type="text" name="num1" id="" />
+      <label for="">+</label>
+      <input type="text" name="num2" id="" />
+      <button type="submit">계산</button>
+    </form>
+    <ul>
+      <!-- th:text => Num1 : 을 대채해버리고 나타난다 -->
+      <!-- <li th:text="${addDto?.num1}">Num1 :</li> -->
+      <!-- AddController.java 에서 (AddDto dto) 이렇게 되있어서 AddDto 에 앞자리만 소문자로 바꿔서 부른다 -->
+      <!-- ? : null 일수도 있음 -->
+      <!-- 처음에 화면에 들어갈때 입력값이 없으니 에러를 미리 방지한다 -->
+      <li>Num1 : <span th:text="${addDto?.num1}"></span></li>
+      <li>Num2 : <span th:text="${addDto?.num2}"></span></li>
+      <!-- 덧셈결과 1번 방법 -->
+      <!-- <li>덧셈결과 : <span th:text="${addDto?.result}"></span></li> -->
+      <!-- 덧셈결과 2번 방법 -->
+      <li>덧셈결과 : <span th:text="${result}"></span></li>
+    </ul>
+  </body>
+</html>

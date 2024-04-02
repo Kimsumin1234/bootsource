@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>EX 3</h1>
+    <ul>
+      <!-- 이렇게 해도 되지만 -->
+      <li><a href="/sample/ex1">ex1</a></li>
+      <!-- 이게 더 안전한 방법이기 때문에 이걸 사용한다 -->
+      <li><a href="" th:href="@{/sample/ex1}">ex1</a></li>
+
+      <!-- / 가 앞에 붙으면 http://localhost:8080/ 부터 시작 -->
+      <!-- / 가 앞에 없으면 http://localhost:8080/sample/ex3 현재 주소에서 뒤에만 변경 -->
+      <li><a href="" th:href="@{ex1}">ex1</a></li>
+
+      <!-- <a href="/sample/ex4?param1=10&param2=20"></a> -->
+      <li><a href="" th:href="@{ex4(param1='data1',param2='data2')}">ex4</a></li>
+    </ul>
+  </body>
+</html>

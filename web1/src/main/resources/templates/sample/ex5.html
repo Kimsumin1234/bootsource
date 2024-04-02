@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <div th:insert="파일경로 :: 조각이름"></div> -->
+    <!-- insert : <div><h1> </h1></div> , div 태그안에 h1 태그가 insert 됬다 -->
+    <!-- replace : <h1> </h1> , div 태그가 h1 태그로 replace 됬다 -->
+    <!-- header 영역 불러오기 -->
+    <div th:replace="/fragments/separate :: header"></div>
+    <h1>EX 5</h1>
+    <!-- content 영역 불러오기 -->
+    <div th:insert="/fragments/separate :: content"></div>
+    <!-- footer 영역 불러오기 -->
+    <div th:insert="/fragments/separate :: footer"></div>
+  </body>
+</html>

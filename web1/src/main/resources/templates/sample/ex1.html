@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,5 +7,15 @@
   </head>
   <body>
     <h1>EX 1</h1>
+    <p th:text="${result}"></p>
+    <!-- 자바스크립트 에서도 불러올수있다 -->
+    <!-- 1번 방법 -->
+    <script>
+      const result = "[[${result}]]";
+    </script>
+    <!-- 2번 방법 -->
+    <script th:inline="javascript">
+      // const result1 = [[${result}]];
+    </script>
   </body>
 </html>

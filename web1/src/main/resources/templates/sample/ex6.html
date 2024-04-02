@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/layout}">
+  <th:block layout:fragment="css">
+    <style>
+      h1 {
+        color: red;
+      }
+    </style>
+  </th:block>
+
+  <div th:replace="~{/fragments/header :: header}"></div>
+  <div layout:fragment="content">
+    <h1>Main Content 영역</h1>
+  </div>
+  <div th:replace="~{/fragments/footer :: footer}"></div>
+
+  <th:block layout:fragment="script">
+    <script>
+      alert("javascript");
+    </script>
+  </th:block>
+</html>

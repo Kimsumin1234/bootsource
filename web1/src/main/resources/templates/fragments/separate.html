@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- 조각(view 로 사용되는 html 애 포함될 부분,공통부분) 만들기 -->
+    <h1 th:fragment="header">Fragment Test - header 파일</h1>
+    <div th:fragment="content">
+      <nav>
+        <ul>
+          <li>List 1</li>
+          <li>List 1</li>
+          <li>List 1</li>
+          <li>List 1</li>
+        </ul>
+      </nav>
+    </div>
+    <h1 th:fragment="footer">Fragment Test - footer 파일</h1>
+  </body>
+</html>

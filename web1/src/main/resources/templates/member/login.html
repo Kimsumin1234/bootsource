@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/layout}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,16 +12,21 @@
     />
   </head>
   <body>
-    <h1 class="text-align">Member Login</h1>
-    <div class="container mt-5">
-      <form action="" method="post">
+    <div class="container mt-5" layout:fragment="content">
+      <!-- novalidate : form 기본 검증(html 에서 제공하는) 중지 -->
+      <form action="" method="post" th:object="${loginDto}" novalidate>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" />
+          <!-- 잘못입력된 값 화면에 보여주기 th:value="${login.email}" -->
+          <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp" th:value="${loginDto.email}" />
+          <!-- hasErrors('email') : email 에러메세지 출력 (기본메세지 : 비어 있을 수 없습니다) -->
+          <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
         </div>
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" name="name" />
+          <input type="text" class="form-control" id="name" name="name" th:value="${loginDto.name}" />
+          <!-- 기본메세지 : 공백일 수 없습니다 -->
+          <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
         <input type="hidden" name="page" value="5" />

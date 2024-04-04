@@ -1,0 +1,27 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/layout}">
+  <div class="container" layout:fragment="content">
+    <h1 class="h2">Memo Read</h1>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2"></div>
+      </div>
+    </div>
+    <div>
+      <form action="" method="get">
+        <div class="mb-3">
+          <label for="mno" class="form-label">mno</label>
+          <input type="text" class="form-control" id="mno" name="mno" readonly th:value="${mDto.mno}" />
+        </div>
+        <div class="mb-3">
+          <label for="memoText" class="form-label">memoText</label>
+          <!-- [[${mDto.memoText}]] or [(${mDto.memoText})] -->
+          <textarea class="form-control" id="memoText" rows="3" name="memoText" readonly>[(${mDto.memoText})]</textarea>
+        </div>
+        <div class="mb-3">
+          <a class="btn btn-success" th:href="@{modify(mno=${mDto.mno})}">수정</a>
+          <a class="btn btn-info" th:href="@{/memo/list}">목록</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</html>

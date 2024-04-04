@@ -62,6 +62,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- 레이아웃 재사용 -->
+		<!-- dialect : 기존 제공된 버전을 변경 -->
+		<!-- thymeleaf 에도 레이아웃 재사용 개념이 있는데 약간 불편해서 그걸 개선한 버전 -->
+        <dependency>
+           <groupId>nz.net.ultraq.thymeleaf</groupId>
+           <artifactId>thymeleaf-layout-dialect</artifactId>
+           <version>3.3.0</version>
+        </dependency>
 	</dependencies>
 
 	<build>

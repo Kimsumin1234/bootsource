@@ -1,0 +1,26 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/layout}">
+  <div class="container" layout:fragment="content">
+    <h1 class="h2">Memo Create</h1>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2"></div>
+      </div>
+    </div>
+    <div>
+      <!-- novalidate : form 기본 검증(html 에서 제공하는) 중지 -->
+      <form action="" method="post" th:object="${mDto}" novalidate>
+        <div class="mb-3">
+          <label for="memoText" class="form-label">memoText</label>
+          <textarea class="form-control" id="memoText" rows="3" name="memoText"></textarea>
+          <!-- hasErrors('name 속성') : 에러메세지 출력 (기본메세지 : 비어 있을 수 없습니다) -->
+          <div th:if="${#fields.hasErrors('memoText')}" th:errors="*{memoText}" class="text-danger"></div>
+        </div>
+        <div class="mb-3">
+          <button class="btn btn-success" type="submit">입력</button>
+          <button class="btn btn-danger" type="reset">취소</button>
+          <a class="btn btn-info" th:href="@{/memo/list}">목록</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</html>

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 
 import lombok.AllArgsConstructor;
@@ -21,19 +22,17 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-public class Board {
+public class SportsMember {
 
-    @SequenceGenerator(name = "board_seq_gen", sequenceName = "board_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "board_seq_gen")
+    @SequenceGenerator(name = "sports_member_seq_gen", sequenceName = "sports_member_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sports_member_seq_gen")
+    @Column(name = "member_id")
     @Id
     private Long id;
 
-    @Column(nullable = true, length = 100)
-    private String title;
+    private String name;
 
-    @Column(length = 1500)
-    private String content;
+    @OneToOne
+    private Locker locker;
 
-    @Column(length = 50)
-    private String writer;
 }

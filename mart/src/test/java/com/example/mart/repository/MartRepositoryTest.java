@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.mart.entity.Delivery;
+import com.example.mart.entity.DeliveryStatus;
 import com.example.mart.entity.Item;
 import com.example.mart.entity.Member;
 import com.example.mart.entity.Order;
@@ -15,6 +17,9 @@ import com.example.mart.entity.OrderStatus;
 
 @SpringBootTest
 public class MartRepositoryTest {
+
+    @Autowired
+    private DeliveryRepository deliveryRepository;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -88,13 +93,15 @@ public class MartRepositoryTest {
         // @OneToMany 는 관련있는 엔티티를 처음부터 안 가지고 옴
         // Order : OrderItem
         // Order 를 기준으로 OrderItem 조회
-        Order order = orderRepository.findById(2L).get();
+        Order order = orderRepository.findById(3L).get();
         System.out.println(order); // 에러발생해결 => @ToString(exclude = "orderItems")
-
+        System.out.println();
         // Order 를 기준으로 OrderItem 조회
         // 에러해결방법 : 1.@Transactional 2.FetchType.EAGER
         System.out.println(order.getOrderItems());
-
+        System.out.println();
+        // Order 를 기준으로 배송지 조회
+        System.out.println(order.getDelivery().getCity());
     }
 
     @Transactional
@@ -137,5 +144,39 @@ public class MartRepositoryTest {
         orderItemRepository.deleteById(1L);
 
         orderRepository.deleteById(1L);
+    }
+
+    // 주문 + 배달(배송지)
+    @Test
+    public void orderInsertDeliveryTest() {
+        // 1.누가 주문하느냐? (id가 1번인 사람이 주문을한다면)
+        // 멤버가 이미 있을경우 이런식으로 가능
+        Member member = Member.builder().id(1L).build();
+        // 어떤 아이템? (id가 2번인 상품을 주문)
+        Item item = Item.builder().id(2L).build();
+
+        // 배송지 입력
+        Delivery delivery = Delivery.builder().city("서울시").street("123-12").zipcode("11160")
+                .deliveryStatus(DeliveryStatus.READY).build();
+        deliveryRepository.save(delivery);
+
+        // 주문 + 주문상품
+        // 주문, 주문상품은 없으니깐 만들어준다
+        // 부모키를 먼저 save 하고 자식키를 save 한다
+        Order order = Order.builder().member(member).orderDate(LocalDateTime.now()).orderStatus(OrderStatus.ORDER)
+                .delivery(delivery)
+                .build();
+        orderRepository.save(order);
+        OrderItem orderItem = OrderItem.builder().item(item).order(order).orderPrice(10000).count(3).build();
+        orderItemRepository.save(orderItem);
+    }
+
+    @Test
+    public void deliveryOrderGet() {
+        // 배송지를 통해서 관련있는 Order 가져오기
+        Delivery delivery = deliveryRepository.findById(1L).get();
+
+        System.out.println(delivery);
+        System.out.println("관련있는 주문 " + delivery.getOrder());
     }
 }

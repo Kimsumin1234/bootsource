@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -29,12 +30,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString(exclude = "orderItems")
+@ToString(exclude = { "orderItems", "delivery" })
 @Getter
 @Setter
 @Table(name = "orders") // 테이블명은 order 사용불가 sql 구문중에 order by 이런게 있어서
 @Entity
-public class Order {
+public class Order extends BaseEntity {
 
     @SequenceGenerator(name = "mart_order_seq_gen", sequenceName = "mart_order_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mart_order_seq_gen")
@@ -56,6 +57,10 @@ public class Order {
     // 관계를 형성하게 되면 JPA 에서 관계형성 테이블을 생성하게 된다
     // ex) ORDERS_ORDER_ITEMS 이런식으로 내가 만들지 않았는데 JPA 에서 그냥 테이블을 생성하는 경우가있음
     @Builder.Default // Builder 를 하게 되면 new ArrayList<>() 를 안해줘서 그걸 하게하는 어노테이션
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER) // 1관계 쪽은 무조건 List 타입이다
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY) // 1관계 쪽은 무조건 List 타입이다
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    // Delivery 와 1:1 관계 설정
+    @OneToOne
+    private Delivery delivery;
 }

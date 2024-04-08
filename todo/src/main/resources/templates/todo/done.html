@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <th:block layout:fragment="css"> </th:block>
+
+  <main layout:fragment="content" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h4>Done</h4>
+      <a href="" class="btn btn-primary">Todo 목록</a>
+    </div>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          완료 목록
+          <div class="small text-danger">참 잘했어요!!</div>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex align-items-center">
+            <div class="flex-grow-1 p-1">
+              <!-- https://icons.getbootstrap.com/icons/caret-right-fill/ -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16">
+                <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+              </svg>
+              <label class="form-check-label">
+                <a href="" class="text-decoration-none text-dark"></a>
+              </label>
+              <!-- 중요 의미 : google icon + bootstrap -->
+              <span class="badge rounded-pill text-bg-danger">important</span>
+            </div>
+            <div>
+              <!-- 작성날짜 -->
+              <small></small>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</html>

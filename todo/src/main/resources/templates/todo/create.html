@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <th:block layout:fragment="css"> </th:block>
+
+  <main layout:fragment="content" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+      <h4>ToDo</h4>
+    </div>
+    <div class="container">
+      <div class="card" style="width: 60rem">
+        <div class="card-header">
+          <h5>ToDo 추가</h5>
+        </div>
+        <div class="card-body">
+          <form action="" method="post">
+            <div class="mb-3 row">
+              <label for="title" class="col-sm-2 col-form-label">Todo</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="title" placeholder="새로운 todo 입력..." name="title" />
+              </div>
+            </div>
+            <div class="mb-3 row">
+              <label for="important" class="col-sm-2 col-form-label">중요도</label>
+              <div class="col-sm-10">
+                <input type="checkbox" name="important" id="important" class="form-check-input" value="true" />
+              </div>
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-success">추가</button>
+              <a th:href="@{list}" class="btn btn-warning">목록</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</html>

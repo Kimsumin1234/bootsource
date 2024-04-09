@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <div layout:fragment="content" class="container mt-5">
+    <h3>도서 조회</h3>
+    <form action="" method="post">
+      <div class="mb-3 row">
+        <label for="category" class="col-sm-2 col-form-label">분류</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="category" name="categoryName" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="title" class="col-sm-2 col-form-label">제목</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="title" name="title" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="publisher" name="publisherName" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="writer" class="col-sm-2 col-form-label">작가</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="writer" name="writer" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="price" class="col-sm-2 col-form-label">가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="price" name="price" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="salePrice" class="col-sm-2 col-form-label">할인가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="salePrice" name="salePrice" />
+        </div>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary">수정</button>
+        <button type="button" class="btn btn-danger">삭제</button>
+
+        <a class="btn btn-secondary">목록</a>
+      </div>
+    </form>
+
+    <!-- 
+	   페이지 나누기 후 결과유지 : 삭제할 때 이 부분을 수정 폼안에 넣어서 보내자 키워드가 url 에 두개씩 붙는 상태가 되어버림
+   	   그래서 따로 빼버림
+     -->
+    <form action="" method="post" id="actionForm">
+      <input type="hidden" name="id" />
+      <input type="hidden" name="page" />
+      <input type="hidden" name="type" />
+      <input type="hidden" name="keyword" />
+    </form>
+  </div>
+  <th:block layout:fragment="script">
+    <script src=""></script>
+  </th:block>
+</html>

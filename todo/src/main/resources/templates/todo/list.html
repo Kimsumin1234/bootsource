@@ -6,8 +6,8 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
       <h4>ToDo</h4>
       <div>
-        <a href="" class="btn btn-success">Todo 추가</a>
-        <a href="" class="btn btn-primary">완료 목록</a>
+        <a href="" class="btn btn-success" th:href="@{create}">Todo 추가</a>
+        <a href="" class="btn btn-primary" th:href="@{done}">완료 목록</a>
       </div>
     </div>
     <div class="container">
@@ -16,30 +16,39 @@
           Today ToDo
           <div class="small text-danger">미루지 말고 지킵시다!!</div>
         </div>
+        <!-- <div th:text="${list}"></div> 값이 들어오나 확인용 코드 -->
         <ul class="list-group list-group-flush">
-          <li class="list-group-item d-flex align-items-center">
+          <li class="list-group-item d-flex align-items-center" th:each="dto : ${list}">
             <div class="flex-grow-1 p-1">
-              <input class="form-check-input me-1" type="checkbox" name="completed" />
-              <label class="form-check-label"></label>
-              <!-- 중요 의미 : google icon + bootstrap -->
-              <span class="badge rounded-pill text-bg-danger">important</span>
+              <!-- value 에다가 id 를 담을수있다 -->
+              <input class="form-check-input me-1" type="checkbox" name="completed" th:value="${dto.id}" />
+              <label class="form-check-label">
+                <a th:href="@{read(id=${dto.id})}" th:text="${dto.title}" class="text-decoration-none"></a>
+              </label>
+              <span class="badge rounded-pill text-bg-danger" th:text="${dto.important?'important':''}"></span>
             </div>
             <div>
               <!-- 작성날짜 -->
-              <small></small>
+              <!-- https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html#temporals-java.time -->
+              <small th:text="${#temporals.format(dto.createdDate,'yyyy-MM-dd')}"></small>
             </div>
           </li>
         </ul>
       </div>
     </div>
     <!-- id 값을 보낼 폼 -->
-    <form method="post" id="completedForm">
+    <form method="post" id="completedForm" th:action="@{update}">
       <input type="hidden" name="id" value="" />
     </form>
   </main>
 
   <th:block layout:fragment="script">
-    <script></script>
-    <script></script>
+    <script>
+      const msg = "[[${msg}]]";
+      if (msg) {
+        alert(msg + " 가 입력 되었습니다");
+      }
+    </script>
+    <script th:src="@{/js/list.js}"></script>
   </th:block>
 </html>

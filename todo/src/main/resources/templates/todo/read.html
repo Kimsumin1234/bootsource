@@ -12,15 +12,27 @@
           <h5>ToDo 추가</h5>
         </div>
         <div class="card-body">
-          <form action="" method="post">
+          <form th:action="@{delete}" method="post">
             <div class="form-group mb-2">
               <label for="title">할 일</label>
-              <input type="text" name="title" id="title" class="form-control" />
+              <input type="text" name="title" id="title" class="form-control" th:value="${todo.title}" readonly />
+            </div>
+            <div class="form-group mb-2">
+              <label for="completed" class="form-check-label">완료</label>
+              <!-- Caused by: org.attoparser.ParseException: (Line = 22, Column = 95) Malformed markup: Attribute "id" appears more than once in element -->
+              <!-- <input> 태그에 id 가 2개 들어가서 500 에러가 남 -->
+              <input type="checkbox" name="completed" id="completed" class="form-check-input" th:checked="${todo.completed}" />
             </div>
             <div class="form-group mb-2">
               <label for="completed" class="form-check-label">중요</label>
-              <input type="checkbox" name="completed" id="completed" class="form-check-input" id="completed" />
+              <input type="checkbox" name="important" id="important" class="form-check-input" th:checked="${todo.important}" />
             </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-danger">삭제</button>
+              <a class="btn btn-success" th:href="@{list}">목록</a>
+            </div>
+            <!-- id 값 hidden 으로 담기 -->
+            <input type="hidden" name="id" th:value="${todo.id}" />
           </form>
         </div>
       </div>

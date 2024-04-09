@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <div layout:fragment="content" class="container mt-5">
+    <h3>도서 추가</h3>
+    <form action="" method="post">
+      <div class="mb-3 row">
+        <label for="category" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+          <select name="categoryName" id="" class="form-select">
+            <option value="">선택</option>
+            <option value="컴퓨터">컴퓨터</option>
+            <option value="인문">인문</option>
+            <option value="소설">소설</option>
+            <option value="경제경영">경제경영</option>
+            <option value="자기계발">자기계발</option>
+          </select>
+          <div class="text-danger"></div>
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="title" class="col-sm-2 col-form-label">제목</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="title" name="title" />
+          <div class="text-danger"></div>
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
+        <div class="col-sm-10">
+          <select name="publisherName" id="" class="form-select">
+            <option value="">선택</option>
+            <option value="로드북">로드북</option>
+            <option value="다산">다산</option>
+            <option value="웅진지식하우스">웅진지식하우스</option>
+            <option value="비룡소">비룡소</option>
+            <option value="을유문화사">을유문화사</option>
+          </select>
+          <div class="text-danger"></div>
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="writer" class="col-sm-2 col-form-label">작가</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="writer" name="writer" />
+          <div class="text-danger"></div>
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="price" class="col-sm-2 col-form-label">가격</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" id="price" name="price" />
+          <div class="text-danger"></div>
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="salePrice" class="col-sm-2 col-form-label">할인가격</label>
+        <div class="col-sm-10">
+          <input type="number" class="form-control" id="salePrice" name="salePrice" />
+          <div class="text-danger"></div>
+        </div>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary">등록</button>
+        <button type="reset" class="btn btn-danger">취소</button>
+      </div>
+    </form>
+  </div>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <div layout:fragment="content" class="container mt-5">
+    <h3>도서 목록</h3>
+
+    <table class="table table-hover mt-2">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">분류</th>
+          <th scope="col">제목</th>
+          <th scope="col">저자</th>
+          <th scope="col">출판사</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"></th>
+          <td></td>
+          <td>
+            <a class="text-decoration-none text-reset"></a>
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a class="btn btn-success">전체목록</a>
+    <!-- page -->
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item">
+          <a class="page-link">Previous</a>
+        </li>
+
+        <li class="page-item">
+          <a class="page-link"></a>
+        </li>
+
+        <li class="page-item">
+          <a class="page-link">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</html>

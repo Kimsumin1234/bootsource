@@ -1,5 +1,8 @@
 package com.example.book.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 import org.junit.jupiter.api.Test;
@@ -9,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.book.entity.Book;
 import com.example.book.entity.Category;
 import com.example.book.entity.Publisher;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest
 public class BookRepositoryTest {
@@ -63,5 +68,43 @@ public class BookRepositoryTest {
             bookRepository.save(book);
         });
 
+    }
+
+    @Transactional
+    @Test
+    public void testBookList() {
+        List<Book> books = bookRepository.findAll();
+
+        books.forEach(book -> {
+            System.out.println(book);
+            System.out.println("출판사 " + book.getPublisher().getName());
+            System.out.println("분야 " + book.getCategory().getName());
+        });
+    }
+
+    @Test
+    public void testCateNameList() {
+        List<Category> list = categoryRepository.findAll();
+
+        list.forEach(cate -> System.out.println(cate));
+
+        // Category(id=1, name=컴퓨터)
+        // 이름만 담고 싶을경우
+        // List<String> cateList = new ArrayList<>();
+        // list.forEach(category->cateList.add(category.getName()));
+        List<String> cateList = list.stream().map(entity -> entity.getName()).collect(Collectors.toList());
+
+    }
+
+    @Test
+    public void testRead() {
+        Book book = bookRepository.findById(2L).get();
+        System.out.println(book);
+
+    }
+
+    @Test
+    public void testModify() {
+        Book book = bookRepository.findById(22L).get();
     }
 }

@@ -14,14 +14,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row"></th>
-          <td></td>
+        <tr th:each="dto : ${list}">
+          <th scope="row" th:text="${dto.id}"></th>
+          <td th:text="${dto.categoryName}"></td>
           <td>
-            <a class="text-decoration-none text-reset"></a>
+            <a th:href="@{read(id=${dto.id})}" class="text-decoration-none text-reset" th:text="${dto.title}"></a>
           </td>
-          <td></td>
-          <td></td>
+          <td th:text="${dto.writer}"></td>
+          <td th:text="${dto.publisherName}"></td>
         </tr>
       </tbody>
     </table>
@@ -44,4 +44,12 @@
       </ul>
     </nav>
   </div>
+  <!-- <th:block layout:fragment="script">
+    <script>
+      const result = "[[${result}]]";
+      if (result) {
+        alert("생성되었습니다");
+      }
+    </script>
+  </th:block> -->
 </html>

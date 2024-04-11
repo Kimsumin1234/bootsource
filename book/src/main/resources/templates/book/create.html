@@ -1,62 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
   <div layout:fragment="content" class="container mt-5">
+    <!-- 유효성 검증 작업
+        1. BookController.java 에서 @GetMapping("/create") public void getCreate(BookDto bookDto) 으로 비어있는 dto를 만든다 
+        2. @Valid 를 사용 @PostMapping("/create") public String postCreate(@Valid BookDto bookDto, BindingResult result) { if (result.hasErrors()) { return "/member/join"; } return "redirect:/member/login"; }
+        3. BookDto.java @NotBlank 는 String , @NotNull 은 Integer , @Valid 랑 Dto 에 검증조건(@NotBlank, @NotNull)은 짝꿍이다 , @NotBlank(message = "제목을 입력해 주세요")
+        4. create.html
+            <form action="" method="post" th:object="${bookDto}" novalidate> , bookDto : 이름을 안주면 클래스이름 앞자리는 소문자로 , novalidate : form 이 가지고 있는 기본검증 하지말아라
+            <select name="categoryName" id="" class="form-select" th:value="${bookDto.categoryName}"> , bookDto. 하고 태그 name 속성을 써준다
+            <div th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}" class="text-danger"></div>
+        5. 유효성검증 작업후 사용자 입력값이 남게하고 싶을때
+           - input : th:value="${bookDto.title}
+           - select : th:value="${bookDto.categoryName}"
+           - option : th:selected="${bookDto.categoryName} == '' -->
     <h3>도서 추가</h3>
-    <form action="" method="post">
+    <form action="" method="post" th:object="${bookDto}" novalidate>
       <div class="mb-3 row">
-        <label for="category" class="col-sm-2 col-form-label"></label>
+        <label for="category" class="col-sm-2 col-form-label">분류</label>
         <div class="col-sm-10">
           <select name="categoryName" id="" class="form-select">
-            <option value="">선택</option>
-            <option value="컴퓨터">컴퓨터</option>
-            <option value="인문">인문</option>
-            <option value="소설">소설</option>
-            <option value="경제경영">경제경영</option>
-            <option value="자기계발">자기계발</option>
+            <!-- DB 에서 categoryName 를 가져와서 보여줌  -->
+            <!-- https://www.thymeleaf.org/doc/tutorials/3.1/thymeleafspring.html#dropdownlist-selectors 6.5 Dropdown/List selectors 이용 -->
+            <option value="" th:selected="${bookDto.categoryName} == ''">선택</option>
+            <option th:each="cate : ${categories}" th:value="${cate}" th:text="${cate}" th:selected="${bookDto.categoryName} == ${cate}"></option>
           </select>
-          <div class="text-danger"></div>
+          <!-- option 에 적어놓은 category 를 보여줌  -->
+          <!-- <select name="categoryName" id="" class="form-select">
+            <option value="" th:selected="${bookDto.categoryName} == ''">선택</option>
+            <option value="컴퓨터" th:selected="${bookDto.categoryName} == '컴퓨터'">컴퓨터</option>
+            <option value="인문" th:selected="${bookDto.categoryName} == '인문'">인문</option>
+            <option value="소설" th:selected="${bookDto.categoryName} == '소설'">소설</option>
+            <option value="경제경영" th:selected="${bookDto.categoryName} == '경제경영'">경제경영</option>
+            <option value="자기계발" th:selected="${bookDto.categoryName} == '자기계발'">자기계발</option>
+          </select> -->
+          <div th:if="${#fields.hasErrors('categoryName')}" th:errors="*{categoryName}" class="text-danger"></div>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="title" class="col-sm-2 col-form-label">제목</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="title" name="title" />
-          <div class="text-danger"></div>
+          <input type="text" class="form-control" id="title" name="title" th:value="${bookDto.title}" />
+          <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
         <div class="col-sm-10">
-          <select name="publisherName" id="" class="form-select">
-            <option value="">선택</option>
-            <option value="로드북">로드북</option>
-            <option value="다산">다산</option>
-            <option value="웅진지식하우스">웅진지식하우스</option>
-            <option value="비룡소">비룡소</option>
-            <option value="을유문화사">을유문화사</option>
+          <select name="publisherName" id="" class="form-select" th:value="${bookDto.publisherName}">
+            <option value="" th:selected="${bookDto.publisherName} == ''">선택</option>
+            <option value="로드북" th:selected="${bookDto.publisherName} == '로드북'">로드북</option>
+            <option value="다산" th:selected="${bookDto.publisherName} == '다산'">다산</option>
+            <option value="웅진지식하우스" th:selected="${bookDto.publisherName} == '웅진지식하우스'">웅진지식하우스</option>
+            <option value="비룡소" th:selected="${bookDto.publisherName} == '비룡소'">비룡소</option>
+            <option value="을유문화사" th:selected="${bookDto.publisherName} == '을유문화사'">을유문화사</option>
           </select>
-          <div class="text-danger"></div>
+          <div th:if="${#fields.hasErrors('publisherName')}" th:errors="*{publisherName}" class="text-danger"></div>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="writer" class="col-sm-2 col-form-label">작가</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="writer" name="writer" />
-          <div class="text-danger"></div>
+          <input type="text" class="form-control" id="writer" name="writer" th:value="${bookDto.writer}" />
+          <div th:if="${#fields.hasErrors('writer')}" th:errors="*{writer}" class="text-danger"></div>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="price" class="col-sm-2 col-form-label">가격</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="price" name="price" />
-          <div class="text-danger"></div>
+          <input type="number" class="form-control" id="price" name="price" th:value="${bookDto.price}" />
+          <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger"></div>
         </div>
       </div>
       <div class="mb-3 row">
         <label for="salePrice" class="col-sm-2 col-form-label">할인가격</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="salePrice" name="salePrice" />
-          <div class="text-danger"></div>
+          <input type="number" class="form-control" id="salePrice" name="salePrice" th:value="${bookDto.salePrice}" />
+          <div th:if="${#fields.hasErrors('salePrice')}" th:errors="*{salePrice}" class="text-danger"></div>
         </div>
       </div>
       <div>

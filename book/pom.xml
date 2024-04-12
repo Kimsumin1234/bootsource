@@ -17,6 +17,24 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+		<!-- Querydsl JPA Support » 5.0.0 -->
+		<!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa -->
+		<dependency>
+    		<groupId>com.querydsl</groupId>
+    		<artifactId>querydsl-jpa</artifactId>
+    		<version>5.0.0</version>
+			<classifier>jakarta</classifier>
+		</dependency>
+
+		<!-- Querydsl APT Support » 5.0.0 -->
+		<!-- https://mvnrepository.com/artifact/com.querydsl/querydsl-apt -->
+		<dependency>
+    		<groupId>com.querydsl</groupId>
+    		<artifactId>querydsl-apt</artifactId>
+    		<version>5.0.0</version>
+			<classifier>jakarta</classifier>
+		</dependency>
+		
 		<!-- 레이아웃 재사용 -->
 		<!-- dialect : 기존 제공된 버전을 변경 -->
 		<!-- thymeleaf 에도 레이아웃 재사용 개념이 있는데 약간 불편해서 그걸 개선한 버전 -->

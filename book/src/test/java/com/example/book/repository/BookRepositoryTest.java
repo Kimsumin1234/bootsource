@@ -8,6 +8,11 @@ import java.util.stream.LongStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import com.example.book.entity.Book;
 import com.example.book.entity.Category;
@@ -106,5 +111,25 @@ public class BookRepositoryTest {
     @Test
     public void testModify() {
         Book book = bookRepository.findById(22L).get();
+    }
+
+    @Test
+    public void testSearchList() {
+
+        // page 번호는 0 부터 시작
+        // Pageable pageable = PageRequest.of(0, 10);
+        // Pageable pageable = PageRequest.of(0, 10, Direction.DESC);
+        // Pageable pageable = PageRequest.of(0, 10, Direction.DESC, "id");
+
+        // 1페이지 에 10개의 게시글을 보여주고 id 를 기준으로 내림차순 정렬해줘
+        // controller 에서 이작업을 해준다 , 원하는 페이지 입력, 게시글수 조절
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
+
+        // Page 객체 : 페이지 나누기에 필요한 메소드 제공 (websource 모델2 만들때 PageDto 역할)
+        Page<Book> result = bookRepository.findAll(bookRepository.makePredicate(), pageable);
+
+        System.out.println("전체 행 수" + result.getTotalElements());
+        System.out.println("필요한 페이지 수" + result.getTotalPages());
+        result.getContent().forEach(content -> System.out.println(content));
     }
 }

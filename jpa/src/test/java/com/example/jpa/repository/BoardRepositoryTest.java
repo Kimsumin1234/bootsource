@@ -67,6 +67,9 @@ public class BoardRepositoryTest {
 
     @Test
     public void queryMethodTest() {
+        List<Board> list = boardRepository.findList();
+        System.out.println("findList " + list.size());
+
         // List<Board> list = boardRepository.findByTitle("Update Title....");
         // System.out.println("findByTitle " + list.size());
 
@@ -86,7 +89,7 @@ public class BoardRepositoryTest {
         // list = boardRepository.findByWriterStartingWith("user");
         // System.out.println("findByWriterStartingWith " + list.size());
 
-        // // b1_0.title like ? escape '\' or b1_0.content=?
+        // b1_0.title like ? escape '\' or b1_0.content=?
         // List<Board> list = boardRepository.findByTitleContainingOrContent("Title",
         // "Content");
         // System.out.println("findByTitleContainingOrContent " + list.size());
@@ -103,8 +106,9 @@ public class BoardRepositoryTest {
 
         // PageRequest.of(페이지번호, 한페이지에 보여줄 게시물수) : 페이지번호는 0부터 시작
         Pageable pageable = PageRequest.of(0, 10); // 페이지번호를 담고 있는 객체
-        List<Board> list = boardRepository.findByIdGreaterThanOrderByIdDesc(0L, pageable);
-        list.forEach(System.out::println);
+        // List<Board> list = boardRepository.findByIdGreaterThanOrderByIdDesc(0L,
+        // pageable);
+        // list.forEach(System.out::println);
 
     }
 }

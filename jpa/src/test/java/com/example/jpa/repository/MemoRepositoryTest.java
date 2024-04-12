@@ -1,7 +1,5 @@
 package com.example.jpa.repository;
 
-import static org.mockito.Mockito.never;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -73,5 +71,19 @@ public class MemoRepositoryTest {
         memoRepository.delete(memo);
         // 삭제가 잘되면 : 삭제 memoOptional.empty
         System.out.println("삭제 memo" + memoRepository.findById(24L));
+    }
+
+    // 객체지향쿼리 테스트
+    @Test
+    public void queryMethodTest() {
+        // 이거는 지금 mno 가 없어서 에러 뜸
+        // List<Memo> list = memoRepository.findByMnoLessThan(5L);
+        // list.forEach(memo -> System.out.println(memo));
+
+        List<Memo> list = memoRepository.findByMnoLessThanOrderByMnoDesc(10L);
+        list.forEach(memo -> System.out.println(memo));
+
+        list = memoRepository.findByMnoBetween(50L, 70L);
+        list.forEach(memo -> System.out.println(memo));
     }
 }

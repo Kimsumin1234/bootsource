@@ -14,11 +14,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:each="dto : ${list}">
+        <tr th:each="dto : ${result.dtoList}">
           <th scope="row" th:text="${dto.id}"></th>
           <td th:text="${dto.categoryName}"></td>
           <td>
-            <a th:href="@{read(id=${dto.id})}" class="text-decoration-none text-reset" th:text="${dto.title}"></a>
+            <a
+              th:href="@{read(id=${dto.id},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+              class="text-decoration-none text-reset"
+              th:text="${dto.title}"
+            ></a>
           </td>
           <td th:text="${dto.writer}"></td>
           <td th:text="${dto.publisherName}"></td>
@@ -26,30 +30,31 @@
       </tbody>
     </table>
 
-    <a class="btn btn-success">전체목록</a>
+    <a class="btn btn-success" th:href="@{list(page=1,type='',keyword='')}">전체목록</a>
     <!-- page -->
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
-        <li class="page-item">
-          <a class="page-link">Previous</a>
+        <!-- result.prev 값에 따라 보여줄지 말지 결정 -->
+        <li class="page-item" th:if="${result.prev}">
+          <a class="page-link" th:href="@{list(page=${result.start-1},type=${requestDto.type},keyword=${requestDto.keyword})}">Previous</a>
         </li>
-
-        <li class="page-item">
-          <a class="page-link"></a>
+        <!-- 페이지 번호 출력 -->
+        <li th:class="'page-item '+ ${result.page == page ? 'active':''}" th:each="page : ${result.pageList}">
+          <a class="page-link" th:text="${page}" th:href="@{list(page=${page},type=${requestDto.type},keyword=${requestDto.keyword})}"></a>
         </li>
-
-        <li class="page-item">
-          <a class="page-link">Next</a>
+        <!-- result.next 값에 따라 보여줄지 말지 결정 -->
+        <li class="page-item" th:if="${result.next}">
+          <a class="page-link" th:href="@{list(page=${result.end+1},type=${requestDto.type},keyword=${requestDto.keyword})}">Next</a>
         </li>
       </ul>
     </nav>
   </div>
-  <!-- <th:block layout:fragment="script">
+  <th:block layout:fragment="script">
     <script>
-      const result = "[[${result}]]";
+      const result = "[[${msg}]]";
       if (result) {
         alert("생성되었습니다");
       }
     </script>
-  </th:block> -->
+  </th:block>
 </html>

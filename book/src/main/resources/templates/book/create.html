@@ -82,6 +82,10 @@
         <button type="submit" class="btn btn-primary">등록</button>
         <button type="reset" class="btn btn-danger">취소</button>
       </div>
+      <!-- page, 새글작성후 1페이지로 가기 -->
+      <input type="hidden" name="page" th:value="1" />
+      <input type="hidden" name="type" th:value="${requestDto.type}" />
+      <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
     </form>
   </div>
 </html>

@@ -2,8 +2,8 @@
   <div class="border-end bg-white" id="sidebar-wrapper" th:fragment="sidebar">
     <div class="sidebar-heading border-bottom bg-light">Guest Book</div>
     <div class="list-group list-group-flush">
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/guestbook/list}">목록</a>
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">등록</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/guestbook/list(page=1)}">목록</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/guestbook/create}">등록</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>

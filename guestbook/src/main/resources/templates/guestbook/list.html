@@ -3,7 +3,7 @@
     <h2>
       Guest Book List Page
       <span>
-        <a href="">
+        <a th:href="@{/guestbook/create}">
           <button class="btn btn-outline-primary">REGISTER</button>
         </a>
       </span>
@@ -16,15 +16,15 @@
         <div class="input-group-prepend">
           <!-- type,페이지와 관련된 정보는 대부분 PageRequestDto 가 받는다 -->
           <select name="type" id="type" class="form-select">
-            <option value="">조건 선택</option>
-            <option value="t">제목</option>
-            <option value="c">내용</option>
-            <option value="w">작성자</option>
-            <option value="tc">제목+내용</option>
-            <option value="tcw">제목+내용+작성자</option>
+            <option value="" th:selected="${requestDto.type==null}">조건 선택</option>
+            <option value="t" th:selected="${requestDto.type=='t'}">제목</option>
+            <option value="c" th:selected="${requestDto.type=='c'}">내용</option>
+            <option value="w" th:selected="${requestDto.type=='w'}">작성자</option>
+            <option value="tc" th:selected="${requestDto.type=='tc'}">제목+내용</option>
+            <option value="tcw" th:selected="${requestDto.type=='tcw'}">제목+내용+작성자</option>
           </select>
         </div>
-        <input class="form-control" type="search" placeholder="Search" name="keyword" id="keyword" />
+        <input class="form-control" type="search" placeholder="Search" name="keyword" id="keyword" th:value="${requestDto.keyword}" />
         <button class="btn btn-outline-success" type="submit">Search</button>
       </div>
     </form>
@@ -38,15 +38,35 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:each="dto : ${list}">
+        <tr th:each="dto : ${result.dtoList}">
           <th scope="row" th:text="${dto.gno}"></th>
           <td>
-            <a href="" class="text-decoration-none text-reset" th:text="${dto.title}"></a>
+            <a
+              th:href="@{read(gno=${dto.gno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+              class="text-decoration-none text-reset"
+              th:text="${dto.title}"
+            ></a>
           </td>
           <td th:text="${dto.writer}"></td>
           <td th:text="${#temporals.format(dto.createdDate,'yyyy-MM-dd')}"></td>
         </tr>
       </tbody>
     </table>
+    <!-- page -->
+    <nav aria-label="...">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" th:if="${result.prev}">
+          <a class="page-link" th:href="@{list(page=${result.start-1},type=${requestDto.type},keyword=${requestDto.keyword})}">Previous</a>
+        </li>
+
+        <li th:class="'page-item ' + ${result.page == page? 'active':''}" th:each="page : ${result.pageList}">
+          <a class="page-link" th:href="@{list(page=${page},type=${requestDto.type},keyword=${requestDto.keyword})}" th:text="${page}"></a>
+        </li>
+
+        <li class="page-item" th:if="${result.next}">
+          <a class="page-link" th:href="@{list(page=${result.end+1},type=${requestDto.type},keyword=${requestDto.keyword})}">Next</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </html>

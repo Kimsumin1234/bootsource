@@ -3,7 +3,7 @@
   <div layout:fragment="content" class="container mt-5">
     <!-- 유효성 검증 작업
         1. BookController.java 에서 @GetMapping("/create") public void getCreate(BookDto bookDto) 으로 비어있는 dto를 만든다 
-        2. @Valid 를 사용 @PostMapping("/create") public String postCreate(@Valid BookDto bookDto, BindingResult result) { if (result.hasErrors()) { return "/member/join"; } return "redirect:/member/login"; }
+        2. @Valid 를 사용 @PostMapping("/create") public String postCreate(@Valid BookDto bookDto, BindingResult result 이순서대로 작성해야함) { if (result.hasErrors()) { return "/member/join"; } return "redirect:/member/login"; }
         3. BookDto.java @NotBlank 는 String , @NotNull 은 Integer , @Valid 랑 Dto 에 검증조건(@NotBlank, @NotNull)은 짝꿍이다 , @NotBlank(message = "제목을 입력해 주세요")
         4. create.html
             <form action="" method="post" th:object="${bookDto}" novalidate> , bookDto : 이름을 안주면 클래스이름 앞자리는 소문자로 , novalidate : form 이 가지고 있는 기본검증 하지말아라

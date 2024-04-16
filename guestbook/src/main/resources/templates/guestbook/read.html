@@ -1,5 +1,63 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/layout}">
   <div class="mt-3" layout:fragment="content">
     <h2>Guest Book Read Page</h2>
+    <form action="" method="post">
+      <div class="mb-3 row">
+        <label for="gno" class="col-sm-2 col-form-label">GNO</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="gno" name="gno" th:value="${dto.gno}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="title" class="col-sm-2 col-form-label">Title</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="title" name="title" th:value="${dto.title}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="content" class="col-sm-2 col-form-label">Content</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="content" name="content" th:value="${dto.content}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="writer" class="col-sm-2 col-form-label">Writer</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="writer" name="writer" th:value="${dto.writer}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="createdDate" class="col-sm-2 col-form-label">CreatedDate</label>
+        <div class="col-sm-10">
+          <input
+            type="text"
+            class="form-control"
+            id="createdDate"
+            name="createdDate"
+            th:value="${#temporals.format(dto.createdDate,'yyyy-MM-dd HH:mm:ss')}"
+            readonly
+          />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="lastModifiedDate" class="col-sm-2 col-form-label">LastModifiedDate</label>
+        <div class="col-sm-10">
+          <input
+            type="text"
+            class="form-control"
+            id="lastModifiedDate"
+            name="lastModifiedDate"
+            th:value="${#temporals.format(dto.lastModifiedDate,'yyyy-MM-dd HH:mm:ss')}"
+            readonly
+          />
+        </div>
+      </div>
+      <div>
+        <a th:href="@{modify(gno=${dto.gno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}" class="btn btn-primary"
+          >수정</a
+        >
+        <a th:href="@{list(page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}" class="btn btn-info">목록</a>
+      </div>
+    </form>
   </div>
 </html>

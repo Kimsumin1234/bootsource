@@ -22,6 +22,8 @@ public interface BoardService {
 
     void removeWithReplies(Long bno);
 
+    Long create(BoardDto createDto);
+
     // entityToDto
     // BoardRepositoryTest 에 objects[0],[1],[2] 순서로 변수입력
     public default BoardDto entityToDto(Board board, Member member, Long replyCount) {

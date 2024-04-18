@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <div layout:fragment="content" class="container mt-5">
+    <h3>도서 수정</h3>
+    <form action="" method="post">
+      <div class="mb-3 row">
+        <label for="category" class="col-sm-2 col-form-label">분류</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="category" name="categoryName" th:value="${dto.categoryName}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="title" class="col-sm-2 col-form-label">제목</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="title" name="title" th:value="${dto.title}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="publisher" name="publisherName" th:value="${dto.publisherName}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="writer" class="col-sm-2 col-form-label">작가</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="writer" name="writer" th:value="${dto.writer}" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="price" class="col-sm-2 col-form-label">가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="price" name="price" th:value="${dto.price}" />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="salePrice" class="col-sm-2 col-form-label">할인가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="salePrice" name="salePrice" th:value="${dto.salePrice}" />
+        </div>
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary">수정</button>
+        <button type="button" class="btn btn-danger">삭제</button>
+
+        <a th:href="@{/book/list(page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}" class="btn btn-secondary">목록</a>
+      </div>
+      <input type="hidden" name="id" th:value="${dto.id}" />
+      <!-- 수정 : form -->
+      <!-- 수정시 페이지 나누기 정보 담지 않아도 됨 : Get 에서 requestDto 가 들어와 있기 때문에 -->
+      <!-- @GetMapping(value = { "/read", "/modify" }) 할때 @ModelAttribute("requestDto") PageRequestDto requestDto 로 정보가 들어옴 -->
+    </form>
+
+    <!-- 
+	   페이지 나누기 후 결과유지 : 삭제할 때 이 부분을 수정 폼안에 넣어서 보내자 키워드가 url 에 두개씩 붙는 상태가 되어버림
+   	   그래서 따로 빼버림
+     -->
+    <!-- 삭제 : actionForm -->
+    <form action="" method="post" id="actionForm">
+      <input type="hidden" name="id" th:value="${dto.id}" />
+      <input type="hidden" name="page" th:value="${requestDto.page}" />
+      <input type="hidden" name="type" th:value="${requestDto.type}" />
+      <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
+    </form>
+  </div>
+  <th:block layout:fragment="script">
+    <script th:src="@{/js/modify.js}"></script>
+  </th:block>
+</html>

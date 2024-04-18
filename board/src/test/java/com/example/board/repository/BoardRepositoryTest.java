@@ -76,7 +76,7 @@ public class BoardRepositoryTest {
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
 
-        Page<Object[]> list = boardRepository.list("title", "100", pageable);
+        Page<Object[]> list = boardRepository.list("tcw", "Title", pageable);
         for (Object[] objects : list) {
 
             System.out.println(Arrays.toString(objects));

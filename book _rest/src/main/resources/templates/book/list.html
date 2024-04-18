@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <div layout:fragment="content" class="container mt-5">
+    <h3>도서 목록</h3>
+
+    <table class="table table-hover mt-2">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">분류</th>
+          <th scope="col">제목</th>
+          <th scope="col">저자</th>
+          <th scope="col">출판사</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- th:data-id="${dto.id}" 이거는 tr 에 줄경우 tr 어디든 클릭해도 id 가 넘어갈수있다 -->
+        <tr th:each="dto : ${result.dtoList}">
+          <th scope="row" th:text="${dto.id}"></th>
+          <td th:text="${dto.categoryName}"></td>
+          <td>
+            <a
+              th:href="@{read(id=${dto.id},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+              class="text-decoration-none text-reset"
+              th:text="${dto.title}"
+              th:data-id="${dto.id}"
+            ></a>
+          </td>
+          <td th:text="${dto.writer}"></td>
+          <td th:text="${dto.publisherName}"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a class="btn btn-success" th:href="@{list(page=1,type='',keyword='')}">전체목록</a>
+    <!-- page -->
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <!-- result.prev 값에 따라 보여줄지 말지 결정 -->
+        <li class="page-item" th:if="${result.prev}">
+          <a class="page-link" th:href="@{list(page=${result.start-1},type=${requestDto.type},keyword=${requestDto.keyword})}">Previous</a>
+        </li>
+        <!-- 페이지 번호 출력 -->
+        <li th:class="'page-item '+ ${result.page == page ? 'active':''}" th:each="page : ${result.pageList}">
+          <a class="page-link" th:text="${page}" th:href="@{list(page=${page},type=${requestDto.type},keyword=${requestDto.keyword})}"></a>
+        </li>
+        <!-- result.next 값에 따라 보여줄지 말지 결정 -->
+        <li class="page-item" th:if="${result.next}">
+          <a class="page-link" th:href="@{list(page=${result.end+1},type=${requestDto.type},keyword=${requestDto.keyword})}">Next</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- REST방식중 fetch를 사용해서 데이터 보여주기 -->
+    <form action="" method="post">
+      <div class="mb-3 row">
+        <label for="category" class="col-sm-2 col-form-label">분류</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="category" name="category" value="" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="title" class="col-sm-2 col-form-label">제목</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="title" name="title" value="" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="publisher" name="publisher" value="" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="writer" class="col-sm-2 col-form-label">작가</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="writer" name="writer" value="" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="price" class="col-sm-2 col-form-label">가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="price" name="price" value="" readonly />
+        </div>
+      </div>
+      <div class="mb-3 row">
+        <label for="salePrice" class="col-sm-2 col-form-label">할인가격</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="salePrice" name="salePrice" value="" readonly />
+        </div>
+      </div>
+      <div>
+        <a href="" class="btn btn-primary">삭제</a>
+        <a href="" class="btn btn-secondary">목록</a>
+      </div>
+      <input type="hidden" name="id" value="" id="book_id" />
+    </form>
+  </div>
+  <th:block layout:fragment="script">
+    <script>
+      const result = "[[${msg}]]";
+      if (result) {
+        alert("생성되었습니다");
+      }
+    </script>
+    <script th:src="@{/js/list.js}"></script>
+  </th:block>
+</html>

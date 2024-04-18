@@ -16,6 +16,7 @@ public class PageRequestDto {
     private int size;
 
     // 검색조건을 담을 변수 선언
+    // String 은 초기화를 안해주면 null 이 뜬다
     private String type;
     private String keyword;
 
@@ -23,6 +24,10 @@ public class PageRequestDto {
     public PageRequestDto() {
         this.page = 1;
         this.size = 10;
+
+        // 검색조건 도 디폴트 설정 추가 (초기화작업)
+        this.type = "";
+        this.keyword = "";
     }
 
     // 스프링부트에서 페이지 나누기 정보를 저장해놓은 객체 => Pageable

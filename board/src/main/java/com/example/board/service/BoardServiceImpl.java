@@ -1,6 +1,7 @@
 package com.example.board.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import com.example.board.dto.PageResultDto;
 import com.example.board.entity.Board;
 import com.example.board.entity.Member;
 import com.example.board.repository.BoardRepository;
+import com.example.board.repository.MemberRepository;
 import com.example.board.repository.ReplyRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
 
     private final ReplyRepository replyRepository;
+
+    private final MemberRepository memberRepository;
 
     // 페이지 나누기 전
     // @Override
@@ -77,6 +81,22 @@ public class BoardServiceImpl implements BoardService {
     public void removeWithReplies(Long bno) {
         replyRepository.deldeleteByBno(bno);
         boardRepository.deleteById(bno);
+    }
+
+    @Override
+    public Long create(BoardDto createDto) {
+        Optional<Member> member = memberRepository.findById(createDto.getWriterEmail());
+
+        if (member.isPresent()) {
+            Board entity = Board.builder()
+                    .title(createDto.getTitle())
+                    .content(createDto.getContent())
+                    .writer(member.get())
+                    .build();
+            entity = boardRepository.save(entity);
+            return entity.getBno();
+        }
+        return null;
     }
 
 }

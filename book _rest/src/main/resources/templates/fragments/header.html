@@ -1,0 +1,52 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <div th:fragment="header">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Book</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" th:href="@{/book/list}">도서 목록</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" th:href="@{/book/create}">도서 등록</a>
+            </li>
+          </ul>
+          <form class="d-flex" role="search" id="searchForm">
+            <!-- 검색 후 결과 페이지는 1로 보여주기 설정 -->
+            <input type="hidden" name="page" value="1" />
+            <!-- type,페이지와 관련된 정보는 대부분 PageRequestDto 가 받는다 -->
+            <select name="type" id="type" class="form-select me-2">
+              <option value="" th:selected="${requestDto.type==null}">조건 선택</option>
+              <option value="c" th:selected="${requestDto.type=='c'}">분류</option>
+              <option value="t" th:selected="${requestDto.type=='t'}">제목</option>
+              <option value="w" th:selected="${requestDto.type=='w'}">저자</option>
+            </select>
+            <!-- keyword,페이지와 관련된 정보는 대부분 PageRequestDto 가 받는다 -->
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+              name="keyword"
+              id="keyword"
+              th:value="${requestDto.keyword}"
+            />
+            <button class="btn btn-outline-success" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </nav>
+  </div>
+</html>

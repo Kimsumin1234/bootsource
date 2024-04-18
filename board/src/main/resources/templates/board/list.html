@@ -3,7 +3,7 @@
     <h2>
       Board List Page
       <span>
-        <a th:href="@{/guestbook/create}">
+        <a th:href="@{/guestbook/create(page=1,type=${requestDto.type},keyword=${requestDto.keyword})}">
           <button class="btn btn-outline-primary">REGISTER</button>
         </a>
       </span>
@@ -16,15 +16,15 @@
         <div class="input-group-prepend">
           <!-- type,페이지와 관련된 정보는 대부분 PageRequestDto 가 받는다 -->
           <select name="type" id="type" class="form-select">
-            <option value="">조건 선택</option>
-            <option value="t">제목</option>
-            <option value="c">내용</option>
-            <option value="w">작성자</option>
-            <option value="tc">제목+내용</option>
-            <option value="tcw">제목+내용+작성자</option>
+            <option value="" th:selected="${requestDto.type==null}">조건 선택</option>
+            <option value="t" th:selected="${requestDto.type=='t'}">제목</option>
+            <option value="c" th:selected="${requestDto.type=='c'}">내용</option>
+            <option value="w" th:selected="${requestDto.type=='w'}">작성자</option>
+            <option value="tc" th:selected="${requestDto.type=='tc'}">제목+내용</option>
+            <option value="tcw" th:selected="${requestDto.type=='tcw'}">제목+내용+작성자</option>
           </select>
         </div>
-        <input class="form-control" type="search" placeholder="Search" name="keyword" id="keyword" />
+        <input class="form-control" type="search" placeholder="Search" name="keyword" id="keyword" th:value="${requestDto.keyword}" />
         <button class="btn btn-outline-success" type="submit">Search</button>
       </div>
     </form>
@@ -42,7 +42,7 @@
           <th scope="row" th:text="${dto.bno}"></th>
           <td>
             <a
-              th:href="@{read(bno=${dto.bno})}"
+              th:href="@{read(bno=${dto.bno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
               class="text-decoration-none text-reset"
               th:text=" ${dto.title} + ' --- [' + ${dto.replyCount} + ']' "
             ></a>

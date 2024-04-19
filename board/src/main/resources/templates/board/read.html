@@ -60,5 +60,64 @@
         <a th:href="@{list(page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}" class="btn btn-info">목록</a>
       </div>
     </form>
+    <!-- 댓글 form 영역 -->
+    <div class="mt-5">
+      <hr />
+      <div class="border p-4">
+        <form action="" method="post" id="replyForm">
+          <input type="hidden" name="rno" id="rno" />
+          <div class="input-group mb-3">
+            <span class="input-group-text">작성자</span>
+            <input type="text" name="replyer" id="replyer" class="form-control" />
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">댓글</span>
+            <textarea name="reply" id="reply" rows="3" class="form-control"></textarea>
+            <button class="btn btn-outline-secondary" type="submit">등록</button>
+          </div>
+        </form>
+      </div>
+      <!-- 댓글 리스트 영역 -->
+      <div class="row mt-3">
+        <h5 class="my-3">
+          <!-- i태그 사용해서 font-awesome 이미지 불러옴 -->
+          <i class="fa-regular fa-comment-dots"></i>
+          <!-- 댓글 총 수 -->
+          <span class="d-inline-block mx-2">[[${dto.replyCount}]]</span> 개의 댓글
+        </h5>
+        <div class="replyList border px-2">
+          <!-- read.js 에 복사 붙여넣기 함 -->
+          <!-- <div class="d-flex justify-content-between my-2 border-bottom reply-row" data-rno="">
+            <div class="p-3">
+              <img src="/img/default.png" alt="" class="rounded-circle mx-auto d-block" style="width: 60px; height: 60px" />
+            </div>
+            <div class="flex-grow-1 align-self-center">
+              <div>댓글 작성자</div>
+              <div>
+                <span class="fx-5">댓글 내용</span>
+              </div>
+              <div class="text-muted">
+                <span class="small">댓글 작성 일자</span>
+              </div>
+            </div>
+            <div class="d-flex flex-column align-self-center">
+              <div class="mb-2">
+                <button class="btn btn-outline-danger btn-sm">삭제</button>
+              </div>
+              <div>
+                <button class="btn btn-outline-success btn-sm">수정</button>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
   </div>
+  <th:block layout:fragment="script">
+    <script>
+      // bno 가져오기
+      const bno = "[[${dto.bno}]]";
+    </script>
+    <script th:src="@{/js/read.js}"></script>
+  </th:block>
 </html>

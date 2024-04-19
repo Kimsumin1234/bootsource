@@ -16,18 +16,23 @@ form.addEventListener("submit", (e) => {
   console.log(data);
 
   // fetch 함수는 method 를 지정 안하면 get 으로 전송됨
+  // fetch 함수는 비동기방식이다.
   // JSON.stringify() : javascript 객체 => json 타입으로 변환
+  // fetch(url) : input 태그에 action 속성
   fetch(`http://localhost:8080/book/new`, {
     method: "post",
     headers: {
       // 포스트맨 Headers 에 Content-type 을 보고 적는다
+      // headers 정보는 필수는아니다, json 데이터 일경우에는 사용한다
       "content-type": "application/json",
     },
     body: JSON.stringify(data),
   })
     .then((response) => response.text()) // return new ResponseEntity<>("success", HttpStatus.OK) "success" 가 String 이여서 .text() 를 사용
     .then((data) => {
-      if (data == "success") alert("입력성공");
-      location.href = "/book/list?page=1&type=&keyword=";
+      if (data == "success") {
+        alert("입력성공");
+        location.href = "/book/list?page=1&type=&keyword=";
+      }
     });
 });

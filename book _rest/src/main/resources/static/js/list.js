@@ -14,7 +14,7 @@ document.querySelector("tbody").addEventListener("click", (e) => {
     .then((data) => {
       console.log(data);
 
-      // 디자인 영역 가져오기
+      // 디자인 영역 가져와서 value 담기
       document.querySelector("#category").value = data.categoryName;
       document.querySelector("#title").value = data.title;
       document.querySelector("#publisher").value = data.publisherName;
@@ -22,5 +22,63 @@ document.querySelector("tbody").addEventListener("click", (e) => {
       document.querySelector("#price").value = data.price;
       document.querySelector("#salePrice").value = data.salePrice;
       document.querySelector("#book_id").value = data.id;
+    });
+});
+
+// delete
+// 삭제 클릭 시 id 가져오기
+const del = document.querySelector(".btn-primary");
+console.log(del);
+del.addEventListener("click", (e) => {
+  e.preventDefault();
+  // 위에서 #book_id 에 value를 넣었다
+  console.log(document.querySelector("#book_id").value);
+  const id = document.querySelector("#book_id").value;
+  // /delete/{id} + 데이터
+  fetch(`/delete/${id}`, {
+    method: "delete", // get 방식이 아니면 method 는 다 쓴다
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      if (data == "success") {
+        alert("삭제성공");
+        location.href = "/book/list?page=1&type=&keyword=";
+      }
+    });
+});
+
+// modify
+// create.js 에 있는 코드 복사 떠옴
+// form submit 시 submit 기능 중지
+const modi = document.querySelector(".btn-secondary");
+console.log(modi);
+modi.addEventListener("click", (e) => {
+  e.preventDefault(); // 태그가 가진 기능(a, submit, reset) 중지
+
+  // form 내용 가져오기 => javascript 객체 생성
+  // const myForm = document.querySelector("#myForm");
+  // myForm 안에 들어있는 요소 찾기
+  // myForm.querySelector("#book_id");
+  const book_id = document.querySelector("#book_id").value;
+  const data = {
+    id: book_id,
+    price: document.querySelector("#price").value,
+    salePrice: document.querySelector("#salePrice").value,
+  };
+  console.log(data);
+
+  fetch(`/modify/${book_id}`, {
+    method: "put",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.text())
+    .then((data) => {
+      if (data == "success") {
+        alert("수정성공");
+        location.href = "/book/list?page=1&type=&keyword=";
+      }
     });
 });

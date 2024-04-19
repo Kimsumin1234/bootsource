@@ -1,9 +1,12 @@
 package com.example.board.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import com.example.board.entity.Board;
 import com.example.board.entity.Reply;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
@@ -13,4 +16,7 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
     @Modifying // delete, update 구문을 쓸때 반드시 필요, 안쓰면 select 가 적용됨
     @Query("delete from Reply r where r.board.bno =:bno")
     void deldeleteByBno(Long bno);
+
+    // findBy~ 이용
+    List<Reply> getRepliesByBoardOrderByRnoDesc(Board board);
 }

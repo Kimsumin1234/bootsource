@@ -15,7 +15,7 @@
     <div class="container">
       <h1>MEMBER</h1>
       <div class="my-3">
-        <a href="/club/logout">Log out</a>
+        <a href="/club/member/logout">Log out</a>
       </div>
       <div class="my-3">
         <a href="/">HOME</a>
@@ -26,6 +26,31 @@
       <div class="my-3">
         <a href="/club/admin">ADMIN</a>
       </div>
+      <h4>thymeleaf 방식</h4>
+      <!-- thymeleaf 유틸리티 객체 표현식 -->
+      <div th:text="${#authentication.name}"></div>
+      <div th:text="${#authentication.authorities}"></div>
+      <div th:text="${#authentication.principal}"></div>
+      <!-- #authentication == sec:authentication= -->
+      <div sec:authentication="name"></div>
+      <div sec:authentication="authorities"></div>
+      <div sec:authentication="principal"></div>
+
+      <!-- sec:authentication : 허가받은 내용 보여줘  -->
+      <!-- principal.authorities : json 요소 접근 -->
+      <h4>기본 방식</h4>
+      <h3>
+        권한 확인
+        <span sec:authentication="principal.authorities"></span>
+      </h3>
+      <h3>
+        username(ID)
+        <span sec:authentication="principal.username"></span>
+      </h3>
+      <!-- sec:authorize : true 면 내용 보여주고 false 면 보여주지마 -->
+      <div sec:authorize="isAuthenticated()">이 부분은 Authenticated 된 사용자만 보는 부분입니다</div>
+      <div sec:authorize="hasRole('ROLE_ADMIN')">이 부분은 Authenticated 되어 권한이 ADMIN 인 사용자만 보는 부분입니다</div>
+      <div sec:authorize="hasRole('ROLE_USER')">이 부분은 Authenticated 되어 일반 USER 가 보는 부분입니다</div>
     </div>
   </body>
 </html>

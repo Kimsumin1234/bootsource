@@ -72,33 +72,61 @@ replyLoaded();
 const replyForm = document.querySelector("#replyForm");
 replyForm.addEventListener("submit", (e) => {
   e.preventDefault();
+
   const replyer = replyForm.querySelector("#replyer");
   const reply = replyForm.querySelector("#reply");
+  // 수정인 경우에 값이 들어옴 (수정인지 등록인지 구분하기위해서 rno가 필요)
+  const rno = replyForm.querySelector("#rno");
+
   const data = {
     bno: bno,
     replyer: replyer.value,
     text: reply.value,
+    rno: rno.value, // rno 추가
   };
   console.log(data);
 
-  fetch(`/replies/new`, {
-    method: "post",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => response.text())
-    .then((data) => {
-      if (data) {
-        alert(data + " 번 댓글 등록");
-        // replyForm 내용제거
-        // 댓글 등록하면 화면에 내용 제거하기
-        replyer.value = "";
-        reply.value = "";
-      }
-      replyLoaded(); // 이거로 새로고침을 안해도 댓글등록이 화면에 바로 확인가능
-    });
+  if (!rno.value) {
+    // 새댓글 등록 (rno 가 없으면)
+    fetch(`/replies/new`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        if (data) {
+          alert(data + " 번 댓글 등록");
+          // replyForm 내용제거
+          // 댓글 등록하면 화면에 내용 제거하기
+          replyer.value = "";
+          reply.value = "";
+        }
+        replyLoaded(); // 이거로 새로고침을 안해도 댓글등록이 화면에 바로 확인가능
+      });
+  } else {
+    // 댓글 수정 (rno 가 있으면), 새글 쓰는거랑 개념이 비슷하다
+    fetch(`/replies/${rno.value}`, {
+      method: "put",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        if (data) {
+          alert(data + " 번 댓글 수정");
+          // replyForm 내용제거
+          replyer.value = "";
+          reply.value = "";
+          rno.value - "";
+        }
+        replyLoaded(); // 이거로 새로고침을 안해도 댓글등록이 화면에 바로 확인가능
+      });
+  }
 });
 
 // delete
@@ -113,14 +141,30 @@ replyList.addEventListener("click", (e) => {
   const rno = btn.closest(".reply-row").dataset.rno;
   console.log("rno", rno);
 
-  fetch(`/replies/${rno}`, {
-    method: "delete",
-  })
-    .then((response) => response.text())
-    .then((data) => {
-      if (data == "success") {
-        alert("댓글 삭제 성공");
-        replyLoaded();
-      }
-    });
+  // 삭제 or 수정 버튼이 눌러졌을때만 동작
+  // 삭제 or 수정 버튼이 클릭이 되었는지 구분하기
+  if (btn.classList.contains("btn-outline-danger")) {
+    fetch(`/replies/${rno}`, {
+      method: "delete",
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        if (data == "success") {
+          alert("댓글 삭제 성공");
+          replyLoaded();
+        }
+      });
+  } else if (btn.classList.contains("btn-outline-success")) {
+    // rno 에 해당하는 댓글을 가져온후 reply form 에 가져온내용 보여주기
+    fetch(`/replies/${rno}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("데이터 가져오기");
+        console.log(data);
+
+        replyForm.querySelector("#rno").value = data.rno;
+        document.querySelector("#replyer").value = data.replyer;
+        document.querySelector("#reply").value = data.text;
+      });
+  }
 });

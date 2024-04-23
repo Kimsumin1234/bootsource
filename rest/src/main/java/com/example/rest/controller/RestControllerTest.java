@@ -31,6 +31,13 @@ public class RestControllerTest {
         return "Hello World";
     }
 
+    // headers 가 필수요소로 한번 알려주지만
+    // produces, consume 으로 한번더 알기쉽게끔 알려주는 용도
+    // produces : 서버 -> 브라우저로 데이터를 보낼때 어떤 타입인지 알려주는 용도
+    // 지금 프로젝트 에서는 json 컨버터가 기본으로 돌아가서 생략가능
+    // json 말고 다른 타입일 경우에는 명시해줘야함
+    // consume : 브라우저 -> 서버 일 경우
+
     @GetMapping(value = "/sample", produces = MediaType.APPLICATION_JSON_VALUE)
     public SampleDto getSample() {
         // Model 에 담지 않아도 json 형태로 객체가 리턴이 된다

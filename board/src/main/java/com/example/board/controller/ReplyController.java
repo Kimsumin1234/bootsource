@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
@@ -62,5 +63,22 @@ public class ReplyController {
         log.info("댓글 하나 요청 {}", rno);
         return new ResponseEntity<>(service.getReply(rno), HttpStatus.OK);
     }
+
+    // 댓글수정 : /replies/{rno} + put
+    @PutMapping("/{rno}")
+    public ResponseEntity<Long> putReply(@PathVariable("rno") Long rno, @RequestBody ReplyDto dto) {
+        log.info("댓글수정 요청 rno, dto {}, {}", rno, dto);
+
+        rno = service.update(dto);
+
+        return new ResponseEntity<>(rno, HttpStatus.OK);
+    }
+    // @PutMapping("/{id}")
+    // public ResponseEntity<String> putReply(@PathVariable("id") String id,
+    // @RequestBody ReplyDto dto) {
+    // log.info("댓글수정 요청 {}, {}", id, dto);
+    // Long rno = service.update(dto);
+    // return new ResponseEntity<>(String.valueOf(rno), HttpStatus.OK);
+    // }
 
 }

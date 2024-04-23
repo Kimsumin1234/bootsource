@@ -16,6 +16,8 @@ public interface ReplyService {
 
     ReplyDto getReply(Long rno);
 
+    Long update(ReplyDto dto);
+
     // 이거 바꿔주는 메소드들이 라이브러리에 있다
     // entityToDto
     public default ReplyDto entityToDto(Reply reply) {

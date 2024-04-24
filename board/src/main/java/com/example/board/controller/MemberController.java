@@ -46,11 +46,20 @@ public class MemberController {
             @ModelAttribute("requestDto") PageRequestDto requestDto, RedirectAttributes rttr) {
         log.info("회원가입 post 요청 {}", memberDto);
 
+        // 유효성 검사
         if (result.hasErrors()) {
             return "/member/register";
         }
 
-        service.register(memberDto);
+        // 아이디 중복 검사
+        try {
+            service.register(memberDto);
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            log.info(msg);
+            rttr.addFlashAttribute("msg", msg);
+            return "redirect:/member/register";
+        }
 
         return "redirect:/member/login";
     }

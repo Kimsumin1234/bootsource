@@ -61,7 +61,7 @@ public class MemberDetailService implements UserDetailsService, MemberService {
             // 중복 이메일 검사
             validateDuplicationMember(insertDto.getEmail());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         }
 
         Member member = Member.builder()
@@ -76,7 +76,7 @@ public class MemberDetailService implements UserDetailsService, MemberService {
     }
 
     // 중복 확인
-    private void validateDuplicationMember(String email) {
+    private void validateDuplicationMember(String email) throws IllegalStateException {
         Optional<Member> member = memberRepository.findById(email);
 
         if (member.isPresent()) {

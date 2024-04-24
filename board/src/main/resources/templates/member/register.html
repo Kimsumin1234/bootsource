@@ -4,17 +4,17 @@
     <form th:action="@{register}" method="post" th:object="${memberDto}" novalidate>
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Name" />
+        <input type="text" class="form-control" id="name" name="name" th:value="${memberDto.name}" placeholder="Enter Name" />
         <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email" />
+        <input type="email" class="form-control" id="email" name="email" th:value="${memberDto.email}" placeholder="Enter Email" />
         <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" />
+        <input type="password" class="form-control" id="password" th:value="${memberDto.password}" name="password" />
         <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
       </div>
       <div>

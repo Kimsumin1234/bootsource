@@ -20,6 +20,8 @@ public class SecurityConfig {
         // .anyRequest().authenticated() : 위에 경로를 제외한 모든 요청은 인증이 필요
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/static/**", "/css/*", "/assets/*", "/img/*", "/js/*").permitAll()
+                .requestMatchers("/board/read").permitAll()
+                .requestMatchers("/board/modify").authenticated()
                 .anyRequest().permitAll())
                 .formLogin(login -> login
                         .loginPage("/member/login").permitAll())

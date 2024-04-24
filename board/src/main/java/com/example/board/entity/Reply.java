@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = "board")
+@ToString(exclude = { "board", "replyer" })
 @Setter
 @Getter
 @Entity
@@ -31,7 +31,9 @@ public class Reply extends BaseEntity {
 
     private String text; // 댓글내용
 
-    private String replyer; // 댓글작성자
+    // private String replyer; // 댓글작성자(익명,아무나 쓸수있음)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member replyer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;

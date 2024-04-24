@@ -1,7 +1,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layouts/layout}">
   <div class="mt-3" layout:fragment="content">
     <h2>Guest Book Modify Page</h2>
-    <form action="" method="post">
+    <form th:action="@{modify}" method="post">
       <div class="mb-3 row">
         <label for="bno" class="col-sm-2 col-form-label">BNO</label>
         <div class="col-sm-10">
@@ -45,17 +45,22 @@
         </div>
       </div>
       <div>
-        <button class="btn btn-primary" type="submit">수정</button>
-        <button class="btn btn-danger" type="button">제거</button>
+        <!-- 작성자만 수정,제거 버튼 볼수있게 하기 -->
+        <button class="btn btn-primary" th:if="${#authentication.name}==${dto.writerEmail}" type="submit">수정</button>
+        <button class="btn btn-danger" th:if="${#authentication.name}==${dto.writerEmail}" type="button">제거</button>
         <a th:href="@{list(page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}" class="btn btn-info">목록</a>
       </div>
+      <!-- hidden : dto.writerEmail controller(@PostMapping("/modify")) 에서 검증할때 필요한값 넣기  -->
+      <input type="hidden" name="writerEmail" th:value="${dto.writerEmail}" />
     </form>
     <!-- 삭제 : actionForm -->
-    <form action="" method="post" id="actionForm">
+    <form th:action="@{remove}" method="post" id="actionForm">
       <input type="hidden" name="bno" th:value="${dto.bno}" />
       <input type="hidden" name="page" th:value="${requestDto.page}" />
       <input type="hidden" name="type" th:value="${requestDto.type}" />
       <input type="hidden" name="keyword" th:value="${requestDto.keyword}" />
+      <!-- hidden : dto.writerEmail controller(@PostMapping("/remove")) 에서 검증할때 필요한값 넣기  -->
+      <input type="hidden" name="writerEmail" th:value="${dto.writerEmail}" />
     </form>
   </div>
   <th:block layout:fragment="script">

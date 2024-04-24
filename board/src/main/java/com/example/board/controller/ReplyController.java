@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class ReplyController {
     }
 
     // /replies/new + post
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/new")
     public ResponseEntity<Long> postCreate(@RequestBody ReplyDto dto) {
         log.info("댓글등록 {}", dto);
@@ -65,6 +67,7 @@ public class ReplyController {
     }
 
     // 댓글수정 : /replies/{rno} + put
+    @PreAuthorize("authentication.name == #dto.writerEmail")
     @PutMapping("/{rno}")
     public ResponseEntity<Long> putReply(@PathVariable("rno") Long rno, @RequestBody ReplyDto dto) {
         log.info("댓글수정 요청 rno, dto {}, {}", rno, dto);

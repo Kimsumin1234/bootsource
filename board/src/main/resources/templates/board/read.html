@@ -21,10 +21,9 @@
         </div>
       </div>
       <div class="mb-3 row">
-        <!-- writer name -->
         <label for="writer" class="col-sm-2 col-form-label">Writer</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="writer" name="writer" th:value="${dto.writerName}" readonly />
+          <input type="text" class="form-control" id="writer" name="writer" th:value="${dto.writerEmail}" readonly />
         </div>
       </div>
       <div class="mb-3 row">
@@ -54,27 +53,43 @@
         </div>
       </div>
       <div>
-        <a th:href="@{modify(bno=${dto.bno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}" class="btn btn-primary"
+        <!-- 수정버튼은 로그인사용자(${#authentication.name}) == 글작성자(dto.writerName) 같을때만 보여줘야한다 -->
+        <a
+          th:if="${#authentication.name}==${dto.writerEmail}"
+          th:href="@{modify(bno=${dto.bno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}"
+          class="btn btn-primary"
           >수정</a
         >
         <a th:href="@{list(page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}" class="btn btn-info">목록</a>
       </div>
     </form>
     <!-- 댓글 form 영역 -->
+    <!-- sec:authorize="isAuthenticated()" : 로그인 한 사람만 댓글 폼 보여주게 하기 -->
+    <!-- sec:authorize="hasRole('ROLE_MEMBER')" : MEMBER 권한 있는 사람만 -->
     <div class="mt-5">
       <hr />
-      <div class="border p-4">
-        <form action="" method="post" id="replyForm">
+      <div class="border p-4" sec:authorize="hasRole('ROLE_MEMBER')">
+        <form th:action="@{/replies/new}" method="post" id="replyForm">
           <input type="hidden" name="rno" id="rno" />
           <div class="input-group mb-3">
             <span class="input-group-text">작성자</span>
-            <input type="text" name="replyer" id="replyer" class="form-control" />
+            <!-- th:value="${#authentication.principal.memberDto.name}" : 로그인 사용자 이름 보여주기 -->
+            <input
+              type="text"
+              name="writerName"
+              id="writerName"
+              class="form-control"
+              th:value="${#authentication.principal.memberDto.name}"
+              readonly
+            />
           </div>
           <div class="input-group mb-3">
             <span class="input-group-text">댓글</span>
             <textarea name="reply" id="reply" rows="3" class="form-control"></textarea>
             <button class="btn btn-outline-secondary" type="submit">등록</button>
           </div>
+          <!-- th:value="${#authentication.name}" : 로그인 사용자 아이디 담기 -->
+          <input type="hidden" id="writerEmail" name="writerEmail" th:value="${#authentication.name}" sec:authorize="isAuthenticated()" />
         </form>
       </div>
       <!-- 댓글 리스트 영역 -->
@@ -117,6 +132,10 @@
     <script>
       // bno 가져오기
       const bno = "[[${dto.bno}]]";
+      // csrf 값 가져오기
+      const csrfValue = `[[${_csrf.token}]]`;
+      // 현재 로그인 유저 아이디 가져오기
+      const email = "[[${#authentication.name}]]";
     </script>
     <script th:src="@{/js/read.js}"></script>
   </th:block>

@@ -1,6 +1,10 @@
 package com.example.board.entity;
 
+import com.example.board.constant.MemberRole;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 
 import lombok.AllArgsConstructor;
@@ -25,4 +29,7 @@ public class Member extends BaseEntity {
     private String password;
 
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
 }

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.board.dto.MemberDto;
 import com.example.board.dto.PageRequestDto;
+import com.example.board.service.MemberService;
 
 import jakarta.validation.Valid;
 
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 @RequestMapping("/member")
 public class MemberController {
+
+    private final MemberService service;
 
     @PreAuthorize("permitAll()")
     @GetMapping("/login")
@@ -38,7 +41,6 @@ public class MemberController {
         log.info("회원가입 페이지 요청");
     }
 
-    @PreAuthorize("permitAll()")
     @PostMapping("/register")
     public String postRegister(@Valid MemberDto memberDto, BindingResult result,
             @ModelAttribute("requestDto") PageRequestDto requestDto, RedirectAttributes rttr) {
@@ -47,6 +49,8 @@ public class MemberController {
         if (result.hasErrors()) {
             return "/member/register";
         }
+
+        service.register(memberDto);
 
         return "redirect:/member/login";
     }

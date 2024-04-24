@@ -41,7 +41,7 @@ const replyLoaded = () => {
         result += `<img src="/img/default.png" alt="" class="rounded-circle mx-auto d-block" style="width: 60px; height: 60px" />`;
         result += `</div>`;
         result += `<div class="flex-grow-1 align-self-center">`;
-        result += `<div>${reply.replyer}</div>`;
+        result += `<div>${reply.writerName}</div>`;
         result += `<div>`;
         result += `<span class="fx-5">${reply.text}</span>`;
         result += `</div>`;
@@ -50,12 +50,15 @@ const replyLoaded = () => {
         result += `</div>`;
         result += `</div>`;
         result += `<div class="d-flex flex-column align-self-center">`;
-        result += `<div class="mb-2">`;
-        result += `<button class="btn btn-outline-danger btn-sm">삭제</button>`;
-        result += `</div>`;
-        result += `<div>`;
-        result += `<button class="btn btn-outline-success btn-sm">수정</button>`;
-        result += `</div>`;
+        // 로그인 user == 작성자 이면 삭제,수정 버튼 보이기
+        if (`${email} == ${reply.writerEmail}`) {
+          result += `<div class="mb-2">`;
+          result += `<button class="btn btn-outline-danger btn-sm">삭제</button>`;
+          result += `</div>`;
+          result += `<div>`;
+          result += `<button class="btn btn-outline-success btn-sm">수정</button>`;
+          result += `</div>`;
+        }
         result += `</div>`;
         result += `</div>`;
       });
@@ -70,64 +73,73 @@ replyLoaded();
 // 새 댓글 등록 form submit 시
 // submit 기능 중지, 작성자 / 댓글 가져오기 => 스크립트 객체로 변경
 const replyForm = document.querySelector("#replyForm");
-replyForm.addEventListener("submit", (e) => {
-  e.preventDefault();
+// replyForm 이 있으면 이벤트 실행 (replyForm이 시큐리티 때문에 없을때도 있을수 있어서 에러 방지차원)
+if (replyForm) {
+  replyForm.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  const replyer = replyForm.querySelector("#replyer");
-  const reply = replyForm.querySelector("#reply");
-  // 수정인 경우에 값이 들어옴 (수정인지 등록인지 구분하기위해서 rno가 필요)
-  const rno = replyForm.querySelector("#rno");
+    // 관계 (익명일 경우 replyer?)
+    const writerEmail = replyForm.querySelector("#writerEmail");
+    const reply = replyForm.querySelector("#reply");
+    // 수정인 경우에 값이 들어옴 (수정인지 등록인지 구분하기위해서 rno가 필요)
+    const rno = replyForm.querySelector("#rno");
 
-  const data = {
-    bno: bno,
-    replyer: replyer.value,
-    text: reply.value,
-    rno: rno.value, // rno 추가
-  };
-  console.log(data);
+    const data = {
+      bno: bno,
+      // 관계 (익명일 경우 replyer?)
+      writerEmail: writerEmail.value,
+      text: reply.value,
+      rno: rno.value, // rno 추가
+    };
+    console.log(data);
 
-  if (!rno.value) {
-    // 새댓글 등록 (rno 가 없으면)
-    fetch(`/replies/new`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        if (data) {
-          alert(data + " 번 댓글 등록");
-          // replyForm 내용제거
-          // 댓글 등록하면 화면에 내용 제거하기
-          replyer.value = "";
-          reply.value = "";
-        }
-        replyLoaded(); // 이거로 새로고침을 안해도 댓글등록이 화면에 바로 확인가능
-      });
-  } else {
-    // 댓글 수정 (rno 가 있으면), 새글 쓰는거랑 개념이 비슷하다
-    fetch(`/replies/${rno.value}`, {
-      method: "put",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        if (data) {
-          alert(data + " 번 댓글 수정");
-          // replyForm 내용제거
-          replyer.value = "";
-          reply.value = "";
-          rno.value - "";
-        }
-        replyLoaded(); // 이거로 새로고침을 안해도 댓글등록이 화면에 바로 확인가능
-      });
-  }
-});
+    if (!rno.value) {
+      // 새댓글 등록 (rno 가 없으면)
+      // csrf 를 disable 해서 csrf 를 안담는 방법도 있다
+      // "X-CSRF-TOKEN": csrf 를 담는 방법 (스크립트 에서)
+      fetch(`/replies/new`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+          "X-CSRF-TOKEN": csrfValue, // const csrfValue
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          if (data) {
+            alert(data + " 번 댓글 등록");
+            // replyForm 내용제거
+            // 댓글 등록하면 화면에 내용 제거하기
+            // replyer.value = ""; 익명인 경우 작성자 내용 지우기
+            reply.value = "";
+          }
+          replyLoaded(); // 이거로 새로고침을 안해도 댓글등록이 화면에 바로 확인가능
+        });
+    } else {
+      // 댓글 수정 (rno 가 있으면), 새글 쓰는거랑 개념이 비슷하다
+      fetch(`/replies/${rno.value}`, {
+        method: "put",
+        headers: {
+          "content-type": "application/json",
+          "X-CSRF-TOKEN": csrfValue, // const csrfValue
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          if (data) {
+            alert(data + " 번 댓글 수정");
+            // replyForm 내용제거
+            // replyer.value = ""; 익명일 경우 제거
+            reply.value = "";
+            rno.value - "";
+          }
+          replyLoaded(); // 이거로 새로고침을 안해도 댓글등록이 화면에 바로 확인가능
+        });
+    }
+  });
+}
 
 // delete
 // 이벤트전파 : 자식요소에 일어난 이벤트는 상위요소로 전달 됨
@@ -146,6 +158,10 @@ replyList.addEventListener("click", (e) => {
   if (btn.classList.contains("btn-outline-danger")) {
     fetch(`/replies/${rno}`, {
       method: "delete",
+      // F12 창에서 403 에러가 뜬경우 Network -> Fetch/XHR 여기로 들어가면 fetch 로 실행한 결과만 볼수있다
+      headers: {
+        "X-CSRF-TOKEN": csrfValue, // const csrfValue
+      },
     })
       .then((response) => response.text())
       .then((data) => {
@@ -163,7 +179,8 @@ replyList.addEventListener("click", (e) => {
         console.log(data);
 
         replyForm.querySelector("#rno").value = data.rno;
-        document.querySelector("#replyer").value = data.replyer;
+        document.querySelector("#writerEmail").value = data.writerEmail;
+        document.querySelector("#writerName").value = data.writerName;
         document.querySelector("#reply").value = data.text;
       });
   }

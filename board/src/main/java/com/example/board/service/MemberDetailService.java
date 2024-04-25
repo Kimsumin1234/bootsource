@@ -57,12 +57,15 @@ public class MemberDetailService implements UserDetailsService, MemberService {
         // try / catch : Exception 날리기위해 사용
         // 이상태는 TERMINAL 창에만 Exception 메세지가 나타난다
         // 이거를 controller 까지 전달을 시켜서 msg 형태로 날리는건 개인이 한번해보시오
+        // 방법1
         try {
             // 중복 이메일 검사
             validateDuplicationMember(insertDto.getEmail());
         } catch (Exception e) {
             throw e;
         }
+        // 방법2. 빨간줄 뜨면 throw 한다
+        // validateDuplicationMember(insertDto.getEmail());
 
         Member member = Member.builder()
                 .email(insertDto.getEmail())
@@ -80,6 +83,8 @@ public class MemberDetailService implements UserDetailsService, MemberService {
         Optional<Member> member = memberRepository.findById(email);
 
         if (member.isPresent()) {
+            // throw : 강제로 Exception 발생
+            // IllegalStateException : 값을 잘못 입력했어요 할때 사용한다
             throw new IllegalStateException("이미 가입된 이메일 입니다");
         }
     }

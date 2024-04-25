@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  :class="{ 'theme-dark': dark }"
+  x-data="data()"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1" />
+
+    <title>Movie</title>
+
+    <!-- Loading main css file -->
+    <link rel="stylesheet" th:href="@{/assets/css/tailwind.output.css}" />
+
+    <!-- Loading third party fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script th:src="@{/assets/js/init-alpine.js}"></script>
+
+    <th:block layout:fragment="css"></th:block>
+  </head>
+
+  <body>
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': isSideMenuOpen }">
+      <!-- Desktop sidebar -->
+      <aside th:replace="~{fragments/side::side}"></aside>
+      <div class="flex flex-col flex-1 w-full">
+        <header th:replace="~{fragments/header::header}"></header>
+        <main class="h-full overflow-y-auto">
+          <!-- 본문 내용 들어올 영역-->
+          <div layout:fragment="content"></div>
+        </main>
+      </div>
+    </div>
+
+    <th:block layout:fragment="script"></th:block>
+  </body>
+</html>

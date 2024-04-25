@@ -51,7 +51,7 @@ const replyLoaded = () => {
         result += `</div>`;
         result += `<div class="d-flex flex-column align-self-center">`;
         // 로그인 user == 작성자 이면 삭제,수정 버튼 보이기
-        if (`${email} == ${reply.writerEmail}`) {
+        if (`${email}` == `${reply.writerEmail}`) {
           result += `<div class="mb-2">`;
           result += `<button class="btn btn-outline-danger btn-sm">삭제</button>`;
           result += `</div>`;

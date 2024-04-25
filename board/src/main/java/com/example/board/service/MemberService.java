@@ -6,6 +6,8 @@ import com.example.board.dto.MemberDto;
 public interface MemberService {
     // 회원가입
     public void register(MemberDto insertDto);
+    // 방법2
+    // public void register(MemberDto insertDto) throws Exception;
 
     // 회원정보 수정, 회원탈퇴 => default dtoToEntity, entityToDto 도 만들어서 해보기
 }

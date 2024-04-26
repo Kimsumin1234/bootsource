@@ -18,6 +18,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
                 .anyRequest().permitAll());
+        // csrf.disable() : csrf 비활성화
+        http.csrf(csrf -> csrf.disable());
         return http.build();
     }
 

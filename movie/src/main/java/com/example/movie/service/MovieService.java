@@ -13,7 +13,14 @@ import com.example.movie.entity.MovieImage;
 
 public interface MovieService {
 
+    // PageResultDto : 페이지 정보를 담아야 해서 (전체리스트 조회)
     PageResultDto<MovieDto, Object[]> getList(PageRequestDto pageRequestDto);
+
+    // MovieDto : 영화 정보 1개만 보기 때문에 (행1개 조회)
+    MovieDto getRow(Long mno);
+
+    // 영화 삭제
+    void movieRemove(Long mno);
 
     // entityToDto
     // list 에 이런형태로 온다 [Movie(mno=61, title=Movie61), MovieImage(inum=176,
@@ -26,7 +33,7 @@ public interface MovieService {
                 .createdDate(movie.getCreatedDate())
                 .lastModifiedDate(movie.getLastModifiedDate())
                 .reviewCnt(reviewCnt != null ? reviewCnt : 0)
-                .avg(avg != null ? avg : 0)
+                .avg(avg != null ? avg : 0.0d)
                 .build();
 
         // 영화 상세 조회 => 이미지를 모두 보여주기

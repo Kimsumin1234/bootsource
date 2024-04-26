@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- form 에서 파일업로드 할려면 enctype="multipart/form-data" 이거를 사용 -->
+    <!-- 텍스트는 서버가 업로드 받을 준비가 기본으로 되있다 -->
+    <!-- 서버에 파일을 업로드 하기위해서는 설정을 할필요가 있다 -->
+    <!-- 파일 처리 설정
+            1) 라이브러리 (환경설정)
+            2) 스프링 서블릿 (servlet 에서 @MultipartConfig 활성화) -->
+    <input type="file" name="files" id="" multiple />
+    <button class="uploadBtn">업로드</button>
+    <script>
+      document.querySelector(".uploadBtn").addEventListener("click", () => {
+        // files 에 있는 파일 목록을 가져와서 폼 형태로 만들기
+        // .files 을 사용하면 배열 형태로 데이터를 가져올수있다
+        const inputFile = document.querySelector("[name='files']");
+        console.log(inputFile);
+
+        const files = inputFile.files;
+        console.log("files");
+        console.log(files);
+
+        // 스크립트에서 폼 태그 작성
+        const formData = new FormData();
+        for (let index = 0; index < files.length; index++) {
+          // append(key,value);
+          formData.append("uploadFiles", files[index]);
+        }
+
+        // console 로 확인해보기
+        // console 에 보면 "uploadFiles" 가 key 라서 4번 나온다
+        // for (const key of formData.keys()) {
+        //   console.log(key);
+        // }
+        // for (const value of formData.values()) {
+        //   console.log(value);
+        // }
+
+        fetch("/upload/uploadAjax", {
+          method: "post",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          });
+      });
+    </script>
+  </body>
+</html>

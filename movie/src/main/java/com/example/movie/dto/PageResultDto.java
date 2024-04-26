@@ -54,9 +54,11 @@ public class PageResultDto<DTO, EN> {
 
         // ceil : 올림
         // int tempEnd = (int) (Math.ceil(현재 페이지번호 / 10.0)) * 10;
-        int tempEnd = (int) (Math.ceil(page / 10.0)) * 10;
+        // 1. 페이지 목록 개수 변경 : 10.0 => 5.0, 10 => 5
+        int tempEnd = (int) (Math.ceil(page / 5.0)) * 5;
         // start는 값이 이런식으로 고정 20-9=11 , 10-9=1 , 30-9=21
-        this.start = tempEnd - 9;
+        // 2. 페이지 목록 개수 변경 : 9 => 4
+        this.start = tempEnd - 4;
         // end 는 총게시글 수에 따라 20으로 끝날수도 17로 끝날수있기 때문에
         this.end = totalPage > tempEnd ? tempEnd : totalPage;
 

@@ -1,6 +1,7 @@
 package com.example.movie.repository;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.movie.constant.MemberRole;
 import com.example.movie.entity.Member;
@@ -108,6 +110,29 @@ public class MovieRepositoryTest {
         for (Object[] objects : list) {
             System.out.println(Arrays.toString(objects));
         }
+    }
+
+    // 특정영화조회 테스트
+    @Test
+    public void movieRowTest() {
+        List<Object[]> list = movieImageRepository.getMovieRow(100L);
+        for (Object[] objects : list) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    // @Transactional : 테이블이 여러개일 경우 1개의 테이블에 문제가 있을경우 되돌아간다
+    // 영화삭제 테스트
+    @Transactional // InvalidDataAccessApiUsageException: Executing an update/delete query 오류 해결
+    @Test
+    public void movieRemoveTest() {
+        Movie movie = Movie.builder().mno(99L).build();
+        // 이미지 삭제
+        movieImageRepository.deleteByMovie(movie);
+        // 리뷰 삭제
+        reviewRepository.deleteByMovie(movie);
+        // 영화 삭제
+        movieRepository.delete(movie);
     }
 
 }

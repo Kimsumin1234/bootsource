@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.movie.constant.MemberRole;
+import com.example.movie.dto.PageRequestDto;
 import com.example.movie.entity.Member;
 import com.example.movie.entity.Movie;
 import com.example.movie.entity.MovieImage;
@@ -105,8 +107,22 @@ public class MovieRepositoryTest {
     @Test
     public void movieImageListTest() {
 
-        PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<Object[]> list = movieImageRepository.getTotalList(pageRequest);
+        // PageRequest pageRequest = PageRequest.of(0, 10);
+        // Page<Object[]> list = movieImageRepository.getTotalList(pageRequest);
+        // for (Object[] objects : list) {
+        // System.out.println(Arrays.toString(objects));
+        // }
+
+        // 검색 추가
+        PageRequestDto requestDto = PageRequestDto.builder()
+                .type("t")
+                .keyword("등록")
+                .page(1)
+                .size(10)
+                .build();
+
+        Page<Object[]> list = movieImageRepository.getTotalList(requestDto.getType(), requestDto.getKeyword(),
+                requestDto.getPageable(Sort.by("mno").descending()));
         for (Object[] objects : list) {
             System.out.println(Arrays.toString(objects));
         }
@@ -133,6 +149,24 @@ public class MovieRepositoryTest {
         reviewRepository.deleteByMovie(movie);
         // 영화 삭제
         movieRepository.delete(movie);
+    }
+
+    // movie_mno 를 이용해서 Review 가져오기
+    @Transactional
+    @Test
+    public void findByMovieTest() {
+        Movie movie = Movie.builder().mno(94L).build();
+        List<Review> reviews = reviewRepository.findByMovie(movie);
+
+        // LazyInitializationException: could not initialize proxy 가 나는 이유
+        // => fetch = FetchType.LAZY 때문이다 : select review table 만 실행
+        // Test 에서 이작업 실행하기 위해서 @Transactional 을 사용
+
+        reviews.forEach(review -> {
+            System.out.println(review);
+            System.out.println(review.getMember().getEmail());
+            System.out.println(review.getMember().getNickname());
+        });
     }
 
 }

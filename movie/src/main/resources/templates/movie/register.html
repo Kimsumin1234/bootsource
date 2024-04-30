@@ -1,5 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
-  <th:block layout:fragment="css"> </th:block>
+  <th:block layout:fragment="css"> 
+    <link rel="stylesheet" th:href="@{/css/upload.css}">
+  </th:block>
   <div layout:fragment="content" class="container px-6 mx-auto grid">
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">영화 등록</h2>
 
@@ -29,6 +31,7 @@
         </div>
       </form>
 
+      <!-- 업로드 이미지 보여주는 영역 -->
       <div class="uploadResult">
         <ul>
           <!-- 
@@ -45,6 +48,9 @@
         </ul>
       </div>
     </div>
-    <th:block layout:fragment="script"> </th:block>
+    <th:block layout:fragment="script">
+      <script th:src="@{/js/upload.js}"></script>
+      <script th:src="@{/js/register.js}"></script>
+    </th:block>
   </div>
 </html>

@@ -3,6 +3,7 @@ package com.example.movie.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,9 +37,11 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public PageResultDto<MovieDto, Object[]> getList(PageRequestDto pageRequestDto) {
 
-        Pageable pageable = pageRequestDto.getPageable(Sort.by("mno").descending());
-
-        Page<Object[]> result = movieImageRepository.getTotalList(pageable);
+        // Pageable pageable = pageRequestDto.getPageable(Sort.by("mno").descending());
+        // Page<Object[]> result = movieImageRepository.getTotalList(pageable);
+        // 검색 추가
+        Page<Object[]> result = movieImageRepository.getTotalList(pageRequestDto.getType(), pageRequestDto.getKeyword(),
+                pageRequestDto.getPageable(Sort.by("mno").descending()));
 
         // entity[0] 이렇게 담으면 Object[] 로 담은 거기 때문에 캐스팅을 사용해서 형변환을 해준다
         // List는 (List<MovieImage>) 이렇게 한다고 바로 변환해주지 않아서 Arrays.asList() 도 같이 사용
@@ -89,6 +92,43 @@ public class MovieServiceImpl implements MovieService {
         movieImageRepository.deleteByMovie(movie);
         reviewRepository.deleteByMovie(movie);
         movieRepository.delete(movie);
+    }
+
+    @Transactional // 테이블 2개가 한번에 작업이 이루어질수 있도록 사용해준다
+    @Override
+    public Long movieInsert(MovieDto movieDto) {
+        // 영화정보 : title => Movie Entity
+        // 이미지 : MovieImage Entity
+
+        // dto => entity
+        Map<String, Object> entityMap = dtoToEntity(movieDto);
+        // Movie 먼저 삽입
+        Movie movie = (Movie) entityMap.get("movie"); // Object 으로 받은거라 (Movie) 로 형변환
+        movieRepository.save(movie);
+        // MovieImage 삽입
+        List<MovieImage> movieImages = (List<MovieImage>) entityMap.get("imgList");
+        movieImages.forEach(image -> movieImageRepository.save(image));
+
+        return movie.getMno();
+    }
+
+    // update/delete 가 동시에 작업해야 해서 @Transactional 를 사용한다
+    @Transactional // TransactionRequiredException: Executing an update/delete query
+    @Override
+    public Long movieUpdate(MovieDto movieDto) {
+        // dto => entity
+        Map<String, Object> entityMap = dtoToEntity(movieDto);
+
+        // movie 에 기존 image 모두제거 (inum 을 구별해서 제거 하기는 어렵다)
+        // entityMap.get("movie") : movie_mno 를 기준으로 제거하기 때문에
+        Movie movie = (Movie) entityMap.get("movie");
+        movieImageRepository.deleteByMovie(movie);
+
+        // MovieImage 에 수정된 이미지를 재삽입
+        List<MovieImage> movieImages = (List<MovieImage>) entityMap.get("imgList");
+        movieImages.forEach(image -> movieImageRepository.save(image));
+
+        return movie.getMno();
     }
 
 }

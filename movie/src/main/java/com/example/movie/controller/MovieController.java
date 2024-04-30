@@ -55,7 +55,60 @@ public class MovieController {
         // 주소줄에 딸려보내는 개념
         rttr.addAttribute("page", pageRequestDto.getPage());
 
+        // 검색 추가
+        rttr.addAttribute("page", pageRequestDto.getPage());
+        rttr.addAttribute("size", pageRequestDto.getSize());
+        rttr.addAttribute("type", pageRequestDto.getType());
+        rttr.addAttribute("keyword", pageRequestDto.getKeyword());
+
         return "redirect:/movie/list";
+    }
+
+    @GetMapping("/register")
+    public void getRegister(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, MovieDto movieDto) {
+        log.info("영화 등록 폼 요청");
+    }
+
+    // 지금 상태는 파일선택만 하고 등록을 안하는 경우, DB에 저장은 안되지만 서버에 저장이 되는상황
+    // 이걸 해결하기 위해서 DB에 저장된 파일과 서버에 저장된 파일을 비교하는 서비스를 만들어서
+    // 일치하지 않는경우 서버를 DB와 일치하게 만드는 서비스를 또 만들어야한다
+    @PostMapping("/register")
+    public String postRegister(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, MovieDto movieDto,
+            RedirectAttributes rttr) {
+        log.info("영화 등록 {}", movieDto);
+
+        // 서비스 호출
+        Long mno = service.movieInsert(movieDto);
+        // mno 넘기기
+        rttr.addFlashAttribute("msg", mno);
+
+        // 검색 추가
+        rttr.addAttribute("page", pageRequestDto.getPage());
+        rttr.addAttribute("size", pageRequestDto.getSize());
+        rttr.addAttribute("type", pageRequestDto.getType());
+        rttr.addAttribute("keyword", pageRequestDto.getKeyword());
+
+        return "redirect:/movie/list";
+    }
+
+    @PostMapping("/modify")
+    public String postMethodName(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, MovieDto movieDto,
+            RedirectAttributes rttr) {
+        log.info("movie 수정 요청 {}", movieDto);
+
+        Long mno = service.movieUpdate(movieDto);
+
+        rttr.addFlashAttribute("msg", mno);
+
+        rttr.addAttribute("mno", movieDto.getMno());
+
+        // 검색 추가
+        rttr.addAttribute("page", pageRequestDto.getPage());
+        rttr.addAttribute("size", pageRequestDto.getSize());
+        rttr.addAttribute("type", pageRequestDto.getType());
+        rttr.addAttribute("keyword", pageRequestDto.getKeyword());
+
+        return "redirect:/movie/read";
     }
 
 }

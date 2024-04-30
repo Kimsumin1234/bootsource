@@ -1,8 +1,12 @@
 package com.example.movie.repository;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 
 import com.example.movie.entity.Movie;
 import com.example.movie.entity.Review;
@@ -15,4 +19,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Modifying
     @Query("delete from Review r where r.movie = ?1")
     void deleteByMovie(Movie movie);
+
+    // movie_mno 를 이용해서 리뷰 가져오기
+    // 리뷰 100개에 해당하는 select 구문을 100번 돌려서 가져오기는 비효율적이다
+    // @EntityGraph 를 사용해서 member table 과 join 에서 처리한다(이구문 할때만 LAZY 로 안하고 같이가져옴)
+    // 기본은 LAZY 가 맞으나, 한 화면에 리뷰정보와 멤버 정보가 같이 필요하기 때문
+    // @EntityGraph 를 사용안하면 select 를 여러번 하지만
+    // @EntityGraph 를 사용하면 join 구문 한번으로 처리가 가능하다
+    @EntityGraph(attributePaths = { "member" }, type = EntityGraphType.FETCH)
+    List<Review> findByMovie(Movie movie);
 }

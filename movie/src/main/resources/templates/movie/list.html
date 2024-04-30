@@ -26,18 +26,28 @@
                 <div class="flex items-center text-sm">
                   <!-- 포스터 -->
                   <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
-                    <img class="object-cover w-full h-full rounded-full" src="" alt="" loading="lazy" />
+                    <!-- 메소드 호출을 주소줄에 딸려 보내는 방법 : th:src="| |" 사용 (th:href="| |" 도 적용 할수있다) -->
+                    <img
+                      class="object-cover w-full h-full rounded-full"
+                      th:src="|/upload/display?fileName=${dto.movieImageDtos[0].getThumbImageURL()}|"
+                      alt=""
+                      loading="lazy"
+                      th:if="${dto.movieImageDtos.size() > 0 && dto.movieImageDtos[0].path != null}"
+                    />
                     <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
                   </div>
                   <!-- 영화 제목 -->
                   <div>
-                    <p class="font-semibold">영화제목</p>
+                    <p class="font-semibold" th:text="${dto.movieImageDtos[0].imgName}"></p>
                   </div>
                 </div>
               </td>
               <!-- 제목 -->
               <td class="px-4 py-3">
-                <a th:href="@{read(mno=${dto.mno},page=${requestDto.page})}" th:text="${dto.title}"></a>
+                <a
+                  th:href="@{read(mno=${dto.mno},page=${requestDto.page}, type=${requestDto.type}, keyword=${requestDto.keyword})}"
+                  th:text="${dto.title}"
+                ></a>
               </td>
               <!-- 리뷰 수 -->
               <td class="px-4 py-3 text-sm" th:text="${dto.reviewCnt}"></td>
@@ -68,7 +78,7 @@
             <ul class="inline-flex items-center">
               <li th:if="${result.prev}">
                 <a
-                  th:href="@{list(page=${result.start-1})}"
+                  th:href="@{list(page=${result.start-1}, type=${requestDto.type}, keyword=${requestDto.keyword})}"
                   class="px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple"
                   aria-label="Previous"
                 >
@@ -82,11 +92,15 @@
                 </a>
               </li>
               <li th:each="page : ${result.pageList}">
-                <a th:href="@{list(page=${page})}" th:text="${page}" class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"></a>
+                <a
+                  th:href="@{list(page=${page}, type=${requestDto.type}, keyword=${requestDto.keyword})}"
+                  th:text="${page}"
+                  class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+                ></a>
               </li>
               <li th:if="${result.next}">
                 <a
-                  th:href="@{list(page=${result.end+1})}"
+                  th:href="@{list(page=${result.end+1}, type=${requestDto.type}, keyword=${requestDto.keyword})}"
                   class="px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple"
                   aria-label="Next"
                 >
@@ -104,5 +118,13 @@
         </span>
       </div>
     </div>
+    <th:block layout:fragment="script">
+      <script>
+        const msg = "[[${msg}]]";
+        if (msg) {
+          alert(msg + " 번이 등록되었습니다");
+        }
+      </script>
+    </th:block>
   </div>
 </html>

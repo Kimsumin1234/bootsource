@@ -3,6 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- font awesome cdn -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Document</title>
   </head>
   <body>
@@ -14,7 +22,59 @@
             2) 스프링 서블릿 (servlet 에서 @MultipartConfig 활성화) -->
     <input type="file" name="files" id="" multiple />
     <button class="uploadBtn">업로드</button>
+    <div id="output"></div>
     <script>
+      // 1. x 를 누르면 파일 삭제 요청
+      // a 태그 기능 중지 => href 값 가져와서 화면 출력 (스크립트에서 작성한 태그는 이벤트거는게 불가능, 부모에 이벤트 걸어야함)
+      const output = document.querySelector("#output");
+
+      output.addEventListener("click", (e) => {
+        e.preventDefault();
+        console.log("x 클릭", e.target); // <i class="fa-solid fa-xmark"></i>
+        console.log("x 클릭", e.currentTarget); // <div id="output"> </div> 이거를 다 가져옴
+        const closestDiv = e.target.closest("div"); // 클릭하고 가까운 div 전파해서 찾기
+
+        const filePath = e.target.closest("a").getAttribute("href"); // 2024%5C04%5C29%2F112b09a3-f8b9-4421-bf99-e5e9a8d765f0_intotheworld2.jpg
+        console.log("closest ", filePath);
+
+        // 폼태그 작성해서 filePath 를 담는다
+        const formData = new FormData();
+        formData.append("filePath", filePath);
+
+        fetch(`/upload/remove`, {
+          method: "post",
+          body: formData,
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            console.log(data);
+            if (data) {
+              alert("이미지 파일 삭제 완료");
+              // 해당 div 제거
+              closestDiv.remove();
+            }
+          });
+      });
+
+      // 2. 이미지파일 브라우저 화면에 보여주기
+      function showUploadImages(arr) {
+        console.log("showUploadImages", arr);
+
+        let tags = "";
+
+        arr.forEach((element) => {
+          // 원본사진 띄우기
+          // output.insertAdjacentHTML("beforeend", `<img src="display?fileName=${element.imageURL}">`);
+          // 썸네일 띄우기  ( <i> : font awesome )
+          tags += `<div>`;
+          tags += `<img src="display?fileName=${element.thumbImageURL}">`;
+          tags += `<a href="${element.imageURL}"><i class="fa-solid fa-xmark"></i></a>`;
+          tags += `</div>`;
+        });
+        output.insertAdjacentHTML("beforeend", tags);
+      }
+
+      // 3. 업로드 버튼 클릭시 이벤트
       document.querySelector(".uploadBtn").addEventListener("click", () => {
         // files 에 있는 파일 목록을 가져와서 폼 형태로 만들기
         // .files 을 사용하면 배열 형태로 데이터를 가져올수있다
@@ -48,6 +108,9 @@
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
+
+            // 이미지 업로드
+            showUploadImages(data);
           });
       });
     </script>

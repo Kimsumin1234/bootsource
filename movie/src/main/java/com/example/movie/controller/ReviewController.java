@@ -13,9 +13,13 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -33,6 +37,45 @@ public class ReviewController {
         List<ReviewDto> reviewDtos = reviewService.getListOfMovie(mno);
 
         return new ResponseEntity<>(reviewDtos, HttpStatus.OK);
+    }
+
+    // /3 + POST => 리뷰번호 리턴
+    @PostMapping("/{mno}")
+    public ResponseEntity<Long> postReview(@RequestBody ReviewDto reviewDto) {
+        log.info("ReviewController postReview {} 요청", reviewDto);
+
+        Long reviewNo = reviewService.addReview(reviewDto);
+
+        return new ResponseEntity<>(reviewNo, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{mno}/{reviewNo}")
+    public ResponseEntity<Long> postRemove(@PathVariable("reviewNo") Long reviewNo) {
+        log.info("리뷰 삭제 요청 {}", reviewNo);
+
+        reviewService.removeReview(reviewNo);
+
+        return new ResponseEntity<>(reviewNo, HttpStatus.OK);
+
+    }
+
+    // /299/5 + GET
+    @GetMapping("/{mno}/{reviewNo}")
+    public ResponseEntity<ReviewDto> getReview(@PathVariable("reviewNo") Long reviewNo) {
+        log.info("리뷰 1개 요청 {}", reviewNo);
+
+        return new ResponseEntity<>(reviewService.getReview(reviewNo), HttpStatus.OK);
+    }
+
+    // 리뷰수정
+    @PutMapping("/{mno}/{reviewNo}")
+    public ResponseEntity<Long> putReview(@PathVariable("reviewNo") Long reviewNo, @RequestBody ReviewDto reviewDto) {
+
+        log.info("리뷰 수정 {}", reviewDto);
+
+        Long rno = reviewService.updateReview(reviewDto);
+
+        return new ResponseEntity<>(rno, HttpStatus.OK);
     }
 
 }

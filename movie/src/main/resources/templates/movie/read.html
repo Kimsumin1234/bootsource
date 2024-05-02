@@ -96,13 +96,14 @@
       <!-- 리뷰 작성 폼-->
       <form action="" method="post" class="review-form">
         <input type="hidden" name="reviewNo" id="reviewNo" />
+        <input type="hidden" name="mid" id="mid" value="2" />
         <label class="block text-sm">
           <span class="text-gray-700 dark:text-gray-400">작성자</span>
           <input
             class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
             placeholder="작성자"
-            name="mid"
-            id="mid"
+            name="nickname"
+            id="nickname"
           />
         </label>
         <label class="block text-sm mt-2">
@@ -122,7 +123,7 @@
           <div class="starrr"></div>
         </label>
         <div class="flex mt-6 text-sm">
-          <button type="button" class="btn btn-outline-danger btn-sm" style="--bs-btn-padding-y: 0.5rem; --bs-btn-padding-x: 1.5rem">
+          <button type="submit" class="btn btn-outline-danger btn-sm" style="--bs-btn-padding-y: 0.5rem; --bs-btn-padding-x: 1.5rem">
             리뷰 등록
           </button>
         </div>
@@ -206,6 +207,7 @@
           }
         })
       </script>
+      <script th:src="@{/js/review.js}"></script>
     </th:block>
   </div>
 </html>

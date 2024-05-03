@@ -61,6 +61,9 @@ fileInput.addEventListener("change", (e) => {
 
   fetch("/upload/uploadAjax", {
     method: "post",
+    headers: {
+      "X-CSRF-TOKEN": csrfValue,
+    },
     body: formData,
   })
     .then((response) => response.json())

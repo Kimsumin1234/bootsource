@@ -1,5 +1,6 @@
 package com.example.movie.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,6 +73,7 @@ public class MovieController {
     // 지금 상태는 파일선택만 하고 등록을 안하는 경우, DB에 저장은 안되지만 서버에 저장이 되는상황
     // 이걸 해결하기 위해서 DB에 저장된 파일과 서버에 저장된 파일을 비교하는 서비스를 만들어서
     // 일치하지 않는경우 서버를 DB와 일치하게 만드는 서비스를 또 만들어야한다
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public String postRegister(@ModelAttribute("requestDto") PageRequestDto pageRequestDto, MovieDto movieDto,
             RedirectAttributes rttr) {

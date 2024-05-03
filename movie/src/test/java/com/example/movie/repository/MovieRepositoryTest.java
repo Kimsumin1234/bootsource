@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.movie.constant.MemberRole;
@@ -176,4 +177,15 @@ public class MovieRepositoryTest {
         });
     }
 
+    @Commit // @Transactional 으로 돌아가지 말고 @Commit 도 계속해조
+    @Transactional
+    @Test
+    public void deleteByMemberTest() {
+        // 회원탈퇴
+        // 1. 리뷰삭제
+        Member member = Member.builder().mid(2L).build();
+        reviewRepository.deleteByMember(member);
+        // 2. 회원삭제
+        memberRepository.delete(member);
+    }
 }

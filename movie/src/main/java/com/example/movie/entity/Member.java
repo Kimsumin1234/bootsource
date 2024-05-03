@@ -2,6 +2,7 @@ package com.example.movie.entity;
 
 import com.example.movie.constant.MemberRole;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,10 +34,13 @@ public class Member extends BaseEntity {
     private Long mid;
 
     // email,password,nickname,MemberRole (String)
+    @Column(unique = true) // 유니크 제약조건(이메일 중복불가 설정)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String nickname;
 
     @Enumerated(EnumType.STRING)

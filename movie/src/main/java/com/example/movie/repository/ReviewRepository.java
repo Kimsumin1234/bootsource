@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
 
+import com.example.movie.entity.Member;
 import com.example.movie.entity.Movie;
 import com.example.movie.entity.Review;
 
@@ -28,4 +29,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // @EntityGraph 를 사용하면 join 구문 한번으로 처리가 가능하다
     @EntityGraph(attributePaths = { "member" }, type = EntityGraphType.FETCH)
     List<Review> findByMovie(Movie movie);
+
+    // @Query("delete from review r where r.member = ?1", nativeQuery=true) sql 쿼리문
+    // @Query를 안하면 delete from review where review_no=? 이 구문이 여러번 실행(비효율)
+    // member_mno 를 이용하면 한번에 삭제 가능
+    @Modifying
+    @Query("delete from Review r where r.member = ?1")
+    void deleteByMember(Member member);
 }

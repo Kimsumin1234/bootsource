@@ -6,7 +6,7 @@
     <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">영화 등록</h2>
 
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-      <form method="post" id="register-form">
+      <form th:action="@{register}" method="post" id="register-form">
         <label class="block text-sm">
           <span class="text-gray-700 dark:text-gray-400">Title</span>
           <input
@@ -49,6 +49,10 @@
       </div>
     </div>
     <th:block layout:fragment="script">
+      <script>
+        // csrf 토큰 설정
+        const csrfValue = "[[${_csrf.token}]]";
+      </script>
       <script th:src="@{/js/upload.js}"></script>
       <script th:src="@{/js/register.js}"></script>
     </th:block>

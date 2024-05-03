@@ -1,5 +1,13 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
   <th:block layout:fragment="css"> </th:block>
+  <!-- 회원탈퇴 (연관관계 가 있는걸 생각해야 한다)
+      - 영화등록 => Movie 는 회원정보와 상관없이 등록 된거라 생각안해도됨
+      - 리뷰등록 => Member 와 관계맺음
+      - 회원등록
+
+      따라서 회원삭제 전에 리뷰를 먼저 삭제해야한다
+      => 리뷰삭제 deleteById or delete 이거는 Id 기준이라 회원을 기준으로 삭제하는 기능을 만들려면 메소드를 새로 만들어야함
+  -->
 
   <div class="flex items-center p-6 bg-gray-50 dark:bg-gray-900" layout:fragment="content" style="min-height: 80vh">
     <div class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
@@ -10,16 +18,15 @@
         </div>
         <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
           <div class="w-full">
-            <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">Login</h1>
-            <!-- th:action="@{login}" : thymeleaf 에서 csrf 토큰을 자동으로 삽입해준다 -->
-            <form th:action="@{login}" method="post">
+            <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">회원탈퇴</h1>
+            <form th:action="@{leave}" method="post">
               <label class="block text-sm">
                 <span class="text-gray-700 dark:text-gray-400">Email</span>
-                <!-- 코드를 편하게 하려면 name="username" 하는게 좋다 -->
+                <!-- 탈퇴는 name="email" 으로 -->
                 <input
                   class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                   placeholder="이메일"
-                  name="username"
+                  name="email"
                 />
               </label>
               <label class="block mt-4 text-sm">
@@ -37,19 +44,16 @@
                 class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
                 type="submit"
               >
-                Log in
+                회원탈퇴
               </button>
             </form>
-            <!-- 주소줄에 error 가 딸려갈경우 메세지창 띄우기 -->
-            <div class="text-danger email" th:if="${param.error}">이메일이나 비밀번호를 확인해 주세요</div>
+            <!-- error 가 날경우 메세지창 띄우기 -->
+            <div class="text-danger email" th:if="${error}" th:text="${error}"></div>
             <hr class="my-8" />
             <p class="mt-4">
               <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" href="./forgot-password.html">
                 Forgot your password?
               </a>
-            </p>
-            <p class="mt-1">
-              <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" th:href="@{register}"> Create account </a>
             </p>
           </div>
         </div>
@@ -57,12 +61,5 @@
     </div>
   </div>
 
-  <th:block layout:fragment="script">
-    <script>
-      const newEmail = "[[${newEmail}]]";
-      if (newEmail) {
-        alert("회원가입이 완료되었습니다");
-      }
-    </script>
-  </th:block>
+  <th:block layout:fragment="script"> </th:block>
 </html>

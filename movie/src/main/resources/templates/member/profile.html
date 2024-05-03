@@ -1,55 +1,74 @@
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layouts/layout}">
-<th:block layout:fragment="css">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+  <th:block layout:fragment="css"> </th:block>
 
-</th:block>
+  <!-- 로그인 성공시
+    시큐리티는 Authentication 객체를 생성
+    SecurityContext 에 보관을 한다
+    /auth 로 확인후
+    th:value="${#authentication. }" 으로 접근가능 (thymeleaf 접근법)
+  -->
+  <!-- 로그인 성공시 Authentication 객체를 생성 하는 순서이기 때문에
+  닉네임 수정하고 프로필로 들어가도 닉네임이 변경된게 바로 반영이 안된다
+  로그아웃 하고 다시 로그인해야 반영이됨
 
-<div class="flex items-center p-6 bg-gray-50 dark:bg-gray-900" layout:fragment="content" style="min-height: 80vh">
+  이걸 해결하는 방법
+  1) 프로필페이지로 바로 안가고 그냥 로그아웃 시킨다  ex) 비밀번호 변경 같은 경우
+  2) Authentication 값을 업데이트
+  -->
+  <div class="flex items-center p-6 bg-gray-50 dark:bg-gray-900" layout:fragment="content" style="min-height: 80vh">
     <div class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
-        <div class="flex flex-col overflow-y-auto md:flex-row">
-            <div class="h-32 md:h-auto md:w-1/2">
-                <img aria-hidden="true" class="object-cover w-full h-full dark:hidden"
-                    th:src="@{/assets/img/forgot-password-office.jpeg}" alt="Office" />
-                <img aria-hidden="true" class="hidden object-cover w-full h-full dark:block"
-                    th:src="@{/assets/img/forgot-password-office-dark.jpeg}" alt="Office" />
-            </div>
-            <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
-                <div class="w-full">
-                    <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
-                        profile
-                    </h1>
-                    <form action="" method="post">
-                        <label class="block mt-4 text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">
-                                이메일
-                            </span>
-                            <input
-                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                type="text" readonly />
-                        </label>
-                        <label class="block mt-4 text-sm">
-                            <span class="text-gray-700 dark:text-gray-400">
-                                닉네임
-                            </span>
-                            <input
-                                class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                type="text" name="nickname" readonly />
-                        </label>
-
-                        <!-- You should use a button here, as the anchor is only used for the example  -->
-                        <p class="mt-4">
-                            <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                                >
-                                닉네임 / 비밀번호 수정
-                            </a>
-                        </p>
-                    </form>
-                </div>
-            </div>
+      <div class="flex flex-col overflow-y-auto md:flex-row">
+        <div class="h-32 md:h-auto md:w-1/2">
+          <img aria-hidden="true" class="object-cover w-full h-full dark:hidden" th:src="@{/assets/img/forgot-password-office.jpeg}" alt="Office" />
+          <img
+            aria-hidden="true"
+            class="hidden object-cover w-full h-full dark:block"
+            th:src="@{/assets/img/forgot-password-office-dark.jpeg}"
+            alt="Office"
+          />
         </div>
-    </div>
-</div>
-<th:block layout:fragment="script">
-</th:block>
+        <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+          <div class="w-full">
+            <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">profile</h1>
+            <form action="" method="post">
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400"> 이메일 </span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  type="text"
+                  th:value="${#authentication.name}"
+                  sec:authorize="isAuthenticated()"
+                  readonly
+                />
+              </label>
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400"> 닉네임 </span>
+                <input
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                  type="text"
+                  name="nickname"
+                  th:value="${#authentication.principal.memberDto.nickname}"
+                  sec:authorize="isAuthenticated()"
+                  readonly
+                />
+              </label>
 
+              <!-- You should use a button here, as the anchor is only used for the example  -->
+              <p class="mt-4">
+                <a class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline" th:href="@{edit}"> 닉네임 / 비밀번호 수정 </a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <th:block layout:fragment="script">
+    <script>
+      const msg = "[[${msg}]]";
+      if (msg) {
+        alert(msg);
+      }
+    </script>
+  </th:block>
 </html>

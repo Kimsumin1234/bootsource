@@ -36,12 +36,15 @@ const reviewsLoaded = () => {
         result += `<div class="text-muted"><span class="small">${formatDate(review.createdDate)}</span></div>`;
         result += `</div>`;
         result += `<div class="d-flex flex-column align-self-center">`;
-        result += `<div class="mb-2">`;
-        result += `<button class="btn btn-outline-danger btn-sm">삭제</button>`;
-        result += `</div>`;
-        result += `<div>`;
-        result += `<button class="btn btn-outline-success btn-sm">수정</button>`;
-        result += `</div>`;
+        // 작성자 == 로그인user 가 같으면 삭제 수정 보여주기
+        if (`${review.email}` == user) {
+          result += `<div class="mb-2">`;
+          result += `<button class="btn btn-outline-danger btn-sm">삭제</button>`;
+          result += `</div>`;
+          result += `<div>`;
+          result += `<button class="btn btn-outline-success btn-sm">수정</button>`;
+          result += `</div>`;
+        }
         result += `</div>`;
         result += `</div>`;
       });
@@ -61,16 +64,20 @@ if (reviewForm) {
   reviewForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const reviewNo = reviewForm.querySelector("#reviewNo");
     const mid = reviewForm.querySelector("#mid");
     const text = reviewForm.querySelector("#text");
     const nickname = reviewForm.querySelector("#nickname");
+    const email = reviewForm.querySelector("#email");
+
+    // 수정이라면 reviewNo 가 존재함
+    const reviewNo = reviewForm.querySelector("#reviewNo");
 
     const body = {
       mno: mno,
       mid: mid.value,
       text: text.value,
       grade: grade || 0, // grade 가 있으면 grade 를 주고 없으면 0 을 주라는 의미
+      email: email.value,
       reviewNo: reviewNo.value,
     };
     console.log(body);
@@ -81,6 +88,7 @@ if (reviewForm) {
       fetch(`/reviews/${mno}`, {
         headers: {
           "content-type": "application/json",
+          "X-CSRF-TOKEN": csrfValue,
         },
         body: JSON.stringify(body),
         method: "post",
@@ -94,7 +102,7 @@ if (reviewForm) {
           if (grade > 0) {
             reviewForm.querySelector(".starrr a:nth-child(" + grade + ")").click(); // grade 초기화
           }
-          nickname.value = "";
+          // nickname.value = ""; 회원리뷰등록 작업후 주석처리
 
           if (data) alert(data + " 번 리뷰가 등록되었습니다");
           reviewsLoaded(); // 댓글 리스트 다시 가져오기
@@ -105,6 +113,7 @@ if (reviewForm) {
         method: "put",
         headers: {
           "content-type": "application/json",
+          "X-CSRF-TOKEN": csrfValue,
         },
         body: JSON.stringify(body),
       })
@@ -118,7 +127,7 @@ if (reviewForm) {
           if (grade > 0) {
             reviewForm.querySelector(".starrr a:nth-child(" + grade + ")").click();
           }
-          nickname.value = "";
+          // nickname.value = ""; 회원리뷰등록 작업후 주석처리
 
           if (data) alert(data + " 번 리뷰가 수정되었습니다");
           reviewForm.querySelector("button").innerHTML = "리뷰 등록";
@@ -137,13 +146,25 @@ reviewList.addEventListener("click", (e) => {
   // closest("요소") : 제일 가까운 상위요소 찾기
   const reviewNo = btn.closest(".review-row").dataset.rno;
   console.log("reviewNo", reviewNo);
+  // 1) 컨트롤러에서 작성자와 로그인 유저가 같은지 다시 한번 비교
+  const email = reviewForm.querySelector("#email");
 
   // 삭제 or 수정 버튼이 눌러졌을때만 동작
   // 삭제 or 수정 버튼이 클릭이 되었는지 구분하기
   if (btn.classList.contains("btn-outline-danger")) {
     if (!confirm("리뷰를 삭제하시겠습니까?")) return;
+
+    // 2) 컨트롤러에서 작성자와 로그인 유저가 같은지 다시 한번 비교
+    const form = new FormData();
+    form.append("email", email.value);
+
     fetch(`/reviews/${mno}/${reviewNo}`, {
       method: "delete",
+      headers: {
+        "X-CSRF-TOKEN": csrfValue,
+      },
+      // 3) 컨트롤러에서 작성자와 로그인 유저가 같은지 다시 한번 비교
+      body: form,
     })
       .then((response) => response.text())
       .then((data) => {
@@ -161,6 +182,8 @@ reviewList.addEventListener("click", (e) => {
         reviewForm.querySelector("#mid").value = data.mid;
         reviewForm.querySelector("#nickname").value = data.nickname;
         reviewForm.querySelector("#text").value = data.text;
+        // 수정버튼에 email 넣기
+        reviewForm.querySelector("#email").value = data.email;
 
         // 이벤트 click 을 직접 호출 (별표시는 클릭해야지 나타나기 때문에)
         if (data.grade > 0) {

@@ -29,7 +29,7 @@ public interface ReviewService {
         ReviewDto reviewDto = ReviewDto.builder()
                 .reviewNo(review.getReviewNo())
                 .grade(review.getGrade())
-                .text(review.getText())
+                .text(review.getText() != null ? review.getText() : "")
                 .createdDate(review.getCreatedDate())
                 .lastModifiedDate(review.getLastModifiedDate())
                 .mid(review.getMember().getMid())
@@ -46,13 +46,23 @@ public interface ReviewService {
         Member member = Member.builder().mid(reviewDto.getMid()).build();
         Movie movie = Movie.builder().mno(reviewDto.getMno()).build();
 
-        Review review = Review.builder()
-                .reviewNo(reviewDto.getReviewNo())
-                .grade(reviewDto.getGrade())
-                .text(reviewDto.getText())
-                .member(member)
-                .movie(movie)
-                .build();
+        // Review review = Review.builder()
+        // .reviewNo(reviewDto.getReviewNo())
+        // .grade(reviewDto.getGrade())
+        // .text(reviewDto.getText())
+        // .member(member)
+        // .movie(movie)
+        // .build();
+
+        // 수정후 날짜가 null로 반영이 되서
+        // reviewDto.getCreatedDate() 이거를 담을려면 builder() 방식은 사용못해서 이방법 사용
+        Review review = new Review();
+        review.setReviewNo(reviewDto.getReviewNo());
+        review.setGrade(reviewDto.getGrade());
+        review.setText(reviewDto.getText());
+        review.setCreatedDate(reviewDto.getCreatedDate());
+        review.setMember(member);
+        review.setMovie(movie);
 
         return review;
     }

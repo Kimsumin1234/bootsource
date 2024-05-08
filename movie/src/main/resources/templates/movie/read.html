@@ -42,8 +42,9 @@
           />
         </label>
 
-        <div class="flex flex-col flex-wrap mb-8 space-y-4 md:flex-row md:items-end md:space-x-5">
-          <div>
+        <div class="flex flex-col flex-wrap mb-8 space-y-4 md:flex-row md:items-end md:space-x-5 mt-3">
+          <!-- 작성자 == 로그인사용자 or ADMIN 권한인지 확인 -->
+          <div sec:authorize="hasRole('ADMIN')">
             <a th:href="@{/movie/modify(mno=${dto.mno},page=${requestDto.page},type=${requestDto.type},keyword=${requestDto.keyword})}">
               <button class="btn btn-success flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white" type="button">
                 <span>수정</span>
@@ -94,9 +95,12 @@
       </div>
 
       <!-- 리뷰 작성 폼-->
-      <form action="" method="post" class="review-form">
+      <!-- hasAnyRole() : 이중에서 하나의 권한을 가지고있는가? -->
+      <form th:action="@{/reviews/}" method="post" class="review-form" sec:authorize="hasAnyRole('MEMBER','ADMIN')">
         <input type="hidden" name="reviewNo" id="reviewNo" />
-        <input type="hidden" name="mid" id="mid" value="2" />
+        <!-- <input type="hidden" name="mid" id="mid" value="2" /> -->
+        <input type="hidden" name="mid" id="mid" th:value="${#authentication.principal.memberDto.mid}" />
+        <input type="hidden" name="email" id="email" th:value="${#authentication.principal.memberDto.email}" />
         <label class="block text-sm">
           <span class="text-gray-700 dark:text-gray-400">작성자</span>
           <input
@@ -104,6 +108,7 @@
             placeholder="작성자"
             name="nickname"
             id="nickname"
+            th:value="${#authentication.principal.memberDto.nickname}"
           />
         </label>
         <label class="block text-sm mt-2">
@@ -179,6 +184,10 @@
     </div>
     <th:block layout:fragment="script">
       <script>
+        // csrf 토큰 설정
+        const csrfValue = `[[${_csrf.token}]]`;
+        // 로그인 유저
+        const user = "[[${#authentication.name}]]";
         // 영화번호 변수에 담기
         const mno = '[[${dto.mno}]]';
         // 영화명 변수에 담기

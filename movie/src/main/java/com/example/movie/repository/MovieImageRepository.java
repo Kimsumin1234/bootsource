@@ -1,5 +1,7 @@
 package com.example.movie.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,4 +18,8 @@ public interface MovieImageRepository extends JpaRepository<MovieImage, Long>, M
     @Modifying
     @Query("delete from MovieImage mi where mi.movie = ?1")
     void deleteByMovie(Movie movie);
+
+    // 어제 날짜 이미지 가져오기 (디비버에서 쿼리문 작성함)
+    @Query(value = "SELECT * FROM MOVIE_IMAGE mi WHERE mi.PATH = TO_CHAR(SYSDATE -1,'yyyy\\mm\\dd')", nativeQuery = true)
+    List<MovieImage> getOldMovieImages();
 }

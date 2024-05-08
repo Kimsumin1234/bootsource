@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.example.movie.handler.CustomAccessDeniedHandler;
+
 @EnableMethodSecurity
 @EnableWebSecurity
 @Configuration
@@ -21,6 +23,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/", "/assets/**", "/css/**", "/js/**", "/auth").permitAll()
                 .requestMatchers("/movie/list", "/movie/read").permitAll()
+                .requestMatchers("/movie/modify").hasRole("ADMIN")
                 .requestMatchers("/upload/display").permitAll() // 사진볼수있게 열어주기
                 .requestMatchers("/reviews/**").permitAll() // 리뷰볼수있게 열어주기
                 .requestMatchers("/member/register").permitAll()
@@ -33,6 +36,15 @@ public class SecurityConfig {
         http.logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                 .logoutSuccessUrl("/"));
+
+        // 403 (접근제한) 페이지 띄우기 - 1. 정적 페이지와 연결
+        // => static 폴더에 access-denied.html 를 사용
+        // http.exceptionHandling(exception ->
+        // exception.accessDeniedPage("/access-denied.html"));
+
+        // 2. 핸들러 사용방법(좀더 다양한 형태로 처리하기 위해서 핸들러 클래스 작성)
+        // => templates 폴더에 access-denied.html 를 사용 (templates에 있기때문에 레이아웃 적용가능)
+        http.exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler()));
 
         // get 을 제외한 모든방식은 csrf 토큰이 필요함
         // => thymeleaf 에서는 form:action 을 삽입하면 자동으로 만들어 준다
@@ -49,5 +61,10 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    // 핸들러 사용 메소드(핸들러 클래스 호출)
+    CustomAccessDeniedHandler customAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 }

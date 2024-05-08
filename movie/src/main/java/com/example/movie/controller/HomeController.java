@@ -8,8 +8,11 @@ import org.springframework.stereotype.Controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.example.movie.dto.PageRequestDto;
 
 @Log4j2
 @Controller
@@ -19,6 +22,23 @@ public class HomeController {
     public String getHome() {
         log.info("home 요청");
         return "redirect:/movie/list";
+    }
+
+    // 로그인을 안하면 모두 시큐리티에 걸려서 로그인 페이지로 가게되지만
+    // 로그인 이후에 잘못된 경로로 접속을 시도할경우
+    // 403 페이지나 404 페이지를 띄워줄수있다
+
+    // 403 페이지 (접근권한 없음)
+    @GetMapping("/access-denied")
+    public void getDenied(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("접근제한 페이지");
+    }
+
+    // 404 페이지 (사용자가 존재하지않는 페이지 경로로 들어갈 경우)
+    @GetMapping("/error")
+    public String getError(@ModelAttribute("requestDto") PageRequestDto pageRequestDto) {
+        log.info("404");
+        return "/except/url404"; // 스프링에서 만들어 놓은 경로 형식을 맞추면 error.html 을 부를수있다
     }
 
     // 회원에 담기는 Security 정보들 확인 (Authentication 객체) json 형태로 담김

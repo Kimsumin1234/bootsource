@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,8 +50,11 @@ public class ReviewController {
         return new ResponseEntity<>(reviewNo, HttpStatus.OK);
     }
 
+    // 4) 컨트롤러에서 작성자와 로그인 유저가 같은지 다시 한번 비교
+    // => @PreAuthorize("authentication.name == #email") String email
+    @PreAuthorize("authentication.name == #email")
     @DeleteMapping("/{mno}/{reviewNo}")
-    public ResponseEntity<Long> postRemove(@PathVariable("reviewNo") Long reviewNo) {
+    public ResponseEntity<Long> postRemove(@PathVariable("reviewNo") Long reviewNo, String email) {
         log.info("리뷰 삭제 요청 {}", reviewNo);
 
         reviewService.removeReview(reviewNo);
@@ -68,6 +72,8 @@ public class ReviewController {
     }
 
     // 리뷰수정
+    // 컨트롤러에서 작성자와 로그인 유저가 같은지 다시 한번 비교
+    @PreAuthorize("authentication.name == #reviewDto.email")
     @PutMapping("/{mno}/{reviewNo}")
     public ResponseEntity<Long> putReview(@PathVariable("reviewNo") Long reviewNo, @RequestBody ReviewDto reviewDto) {
 
